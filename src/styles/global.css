@@ -1,14 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Nunito:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --bg-color: #1a1a2e;
-  --bg-secondary: #16213e;
-  --accent-color: #e94560;
-  --accent-gold: #f5a623;
-  --text-primary: #f0f0f5;
-  --text-muted: #a0a0b2;
-  --font-title: 'MedievalSharp', cursive, serif;
-  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --cosmos-bg: #050814;
+  --cosmos-subbg: #0A1020;
+  --cosmos-card: #101A2E;
+  --cosmos-blue: #3984FF;
+  --cosmos-violet: #895DFF;
+  --cosmos-cyan: #00E5FF;
+  --cosmos-gold: #F5A623;
+  --cosmos-text: #F1F5FF;
+  --cosmos-muted: #98A7C0;
 }
 
 *,
@@ -25,104 +30,50 @@ body,
   width: 100%;
   height: 100%;
   overflow: hidden;
-}
-
-body {
-  font-family: var(--font-body);
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  line-height: 1.5;
+  background-color: var(--cosmos-bg);
+  color: var(--cosmos-text);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  user-select: none;
 }
 
-h1, h2, h3, h4, h5, h6, .font-title {
-  font-family: var(--font-title);
-  letter-spacing: 0.05em;
-}
-
-button {
-  font-family: var(--font-body);
-}
-
-/* Canvas standard game rendering styles */
-canvas {
-  display: block;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-/* Custom Scrollbar for RPG Storybook panels */
+/* Custom Scrollbars for Cosmos Panels */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(20, 14, 10, 0.6);
+  background: rgba(10, 16, 32, 0.6);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 168, 64, 0.5);
+  background: rgba(57, 132, 255, 0.35);
   border-radius: 4px;
-  border: 1px solid rgba(212, 168, 64, 0.2);
+  border: 1px solid rgba(57, 132, 255, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(242, 207, 109, 0.8);
+  background: rgba(137, 93, 255, 0.6);
 }
 
-/* Keyframe Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Cosmic Glow Effects */
+.glow-blue {
+  box-shadow: 0 0 25px -5px rgba(57, 132, 255, 0.3);
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.glow-violet {
+  box-shadow: 0 0 25px -5px rgba(137, 93, 255, 0.3);
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.glow-cyan {
+  box-shadow: 0 0 20px -3px rgba(0, 229, 255, 0.35);
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-8px); }
-  40%, 80% { transform: translateX(8px); }
+.glass-panel {
+  background: linear-gradient(135deg, rgba(16, 26, 46, 0.82) 0%, rgba(10, 16, 32, 0.92) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(57, 132, 255, 0.18);
 }
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 0.3;
-  }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
