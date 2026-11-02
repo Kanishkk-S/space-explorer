@@ -1,6 +1,6 @@
 /*
  * ============================================================
- * ESPAÑA EXPLORER — ESP32 Controller Firmware (Integrated Hardware)
+ * SPACE EXPLORER — ESP32 Controller Firmware (Cosmos 3D Experience)
  * ============================================================
  * 
  * Hardware:
@@ -729,7 +729,34 @@ void readSerialCommands() {
     const char* type = doc["type"];
     if (!type) continue;
     
-    if (strcmp(type, "led") == 0) {
+    if (strcmp(type, "auth_success") == 0) {
+      digitalWrite(LED_GREEN, HIGH);
+      digitalWrite(LED_RED, LOW);
+      playTone(523, 80); delay(40);
+      playTone(659, 80); delay(40);
+      playTone(784, 120);
+      const char* name = doc["payload"]["name"] | doc["name"];
+      if (name) statusQuest = String("Cadet: ") + String(name);
+      updateDisplay(millis());
+    }
+    else if (strcmp(type, "auth_failed") == 0) {
+      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_GREEN, LOW);
+      playTone(300, 150); delay(50);
+      playTone(200, 200);
+      digitalWrite(LED_RED, LOW);
+    }
+    else if (strcmp(type, "display_update") == 0) {
+      JsonObject payload = doc["payload"];
+      const char* sec = payload["section"] | doc["section"];
+      const char* pla = payload["planet"] | doc["planet"];
+      const char* stu = payload["student"] | doc["student"];
+      if (sec) statusLocation = String("Sector: ") + String(sec);
+      if (pla) statusObjective = String("Target: ") + String(pla);
+      if (stu) statusQuest = String("Cadet: ") + String(stu);
+      updateDisplay(millis());
+    }
+    else if (strcmp(type, "led") == 0) {
       const char* color = doc["color"];
       bool state = doc["state"];
       if (strcmp(color, "green") == 0) {
@@ -778,11 +805,11 @@ void showDiagnosticStartupScreen(const char* rfidMsg, const char* mpuMsg, const 
   tft.fillScreen(ST77XX_BLACK);
   
   // Header banner
-  tft.fillRect(0, 0, 160, 18, 0x18C3); // Dark Navy Blue
+  tft.fillRect(0, 0, 160, 18, 0x0113); // Deep Cosmos Blue
   tft.setTextSize(1);
-  tft.setTextColor(0xFD20); // Gold
+  tft.setTextColor(0x07FF); // Cyan
   tft.setCursor(18, 5);
-  tft.print("ESPANA EXPLORER");
+  tft.print("SPACE EXPLORER");
   
   // Title
   tft.setCursor(8, 24);
@@ -839,11 +866,11 @@ void updateDisplay(unsigned long now) {
   selectTFT();
   
   // Header Bar (0..14)
-  tft.fillRect(0, 0, 160, 15, 0x18C3); // Dark Blue
+  tft.fillRect(0, 0, 160, 15, 0x0113); // Deep Cosmos Blue
   tft.setTextSize(1);
-  tft.setTextColor(0xFD20); // Gold
+  tft.setTextColor(0x07FF); // Cyan
   tft.setCursor(4, 4);
-  tft.print("ESPANA EXPLORER");
+  tft.print("SPACE EXPLORER - 3D");
   
   // Connection & City (16..26)
   tft.fillRect(0, 16, 160, 11, ST77XX_BLACK);

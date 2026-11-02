@@ -1,230 +1,117 @@
-# ESPAÑA EXPLORER
+# SPACE EXPLORER — COSMOS 3D EXPERIENCE
 
-A complete, playable browser-based illustrated 2D adventure RPG set in a colorful, hand-illustrated version of Spain.
+**EXPLORE THE UNIVERSE. DISCOVER THE UNKNOWN.**
 
-## 🎮 Overview
+An immersive, futuristic digital planetarium and cosmos exploration platform designed for college exhibitions and interactive student learning. Built with **React 18**, **Three.js / React Three Fiber**, **Tailwind CSS**, and **ESP32 physical hardware controller telemetry**.
 
-Explore a fictionalized, storybook-inspired version of Spain! Travel between cities, meet unique characters, accept quests, find clues, solve puzzles, collect artifacts, and uncover the mystery of **The Forgotten Atlas**.
+---
 
-### Features
-- **Hand-illustrated procedural art** — All visuals drawn with Canvas 2D
-- **Multiple Spanish cities** — Madrid, Barcelona, Sevilla, Granada, Valencia, Toledo
-- **Rich quest system** — Main quest chain + side quests with real objectives
-- **Interactive NPCs** — Unique characters with personality and branching dialogue
-- **Puzzle mechanics** — Symbol sequences, mechanism puzzles with actual logic
-- **Inventory & Journal** — Track items, clues, and discoveries
-- **Save/Load** — Persistent progress via localStorage
-- **ESP32 Controller** — Optional hardware controller with joystick, buttons, RFID, gyroscope
-- **Responsive design** — Desktop-first with tablet/mobile support
+## 🌟 Key Application Modules
+
+### 1. Cinematic RFID-First Authentication
+- Full-screen animated deep-space starfield with pulsing radar waves.
+- Physical student badge verification via RC522 RFID reader.
+- Dedicated, clearly labeled **Demo Mode** for hardware-free exhibition testing.
+- Protected Administrator & Instructor Portal to register cards and track student cohorts.
+
+### 2. Interactive 3D Solar System (Centrepiece)
+- Real-time 3D Three.js environment featuring the Sun and all 8 major planets (Mercury through Neptune).
+- True axial rotation, orbital revolution around the Sun, and visible orbital paths.
+- Saturn's rings with transparent shading, atmospheric coronal sunlight halos.
+- Interactive OrbitControls (camera rotation, pan, zoom, click-to-focus fly-to camera transitions).
+- Orbital velocity stepper controls (0.5x to 4x) and pause/resume.
+
+### 3. Dedicated Planet Explorer & Moons
+- Individual interactive 3D model inspector for every planet.
+- Scientific tabs: Overview, Internal Structure, Atmosphere, Natural Moons, Exploration History, and Facts.
+- Coverage of key natural satellites: Earth's Moon, Europa, Titan, Enceladus, Io, Phobos, Deimos, Callisto, Ganymede.
+- Direct bookmarking to personalized student portfolio.
+
+### 4. Deep Space Exploration
+- High-fidelity profiles across Stars, Galaxies, Nebulae, and Extreme Phenomena.
+- Highlights: Milky Way Galaxy, Andromeda Galaxy (M31), Orion Nebula (M42), Crab Supernova Remnant (M1), Sagittarius A* Supermassive Black Hole, and Betelgeuse.
+
+### 5. Cosmic Knowledge Encyclopedia
+- Core astrophysics foundations: The Big Bang & Primordial Expansion, Stellar Evolution & Lifecycles, Spacetime Curvature & General Relativity, and Dark Matter & Dark Energy.
+
+### 6. Space Academy & Interactive Quizzes
+- Structured astronomy curriculum with difficulty ratings, durations, and learning objectives.
+- Interactive 4-option multiple-choice quizzes with instant correct/incorrect feedback, scientific explanations, accuracy scoring, and celebration confetti on 100% mastery.
+
+### 7. My Discoveries (Isolated Student Portfolios)
+- Personal discovery library per student: bookmarked objects with category filters and search, explored objects timeline, quiz score history, and unlockable achievement badges.
+
+---
+
+## 🛠️ Hardware Integration (ESP32 Dev Module)
+
+The physical exhibition controller communicates with the browser over **Web Serial USB** (or WebSockets) at 115200 baud with real-time bidirectional JSON telemetry.
+
+### Verified Hardware Pinout
+| Component | Function / Pin | ESP32 GPIO | Description |
+| :--- | :--- | :--- | :--- |
+| **ST7735 1.8" TFT** | SPI CS | `GPIO 5` | Hardware VSPI Chip Select |
+| | SPI DC | `GPIO 27` | Data / Command Select |
+| | SPI RST | `GPIO 4` | Hardware Reset |
+| | SPI SCK | `GPIO 18` | Shared VSPI Clock Bus |
+| | SPI MOSI | `GPIO 23` | Shared VSPI MOSI Bus |
+| **RC522 RFID** | SPI SS / CS | `GPIO 16` | Dedicated CS for Bus Arbitration |
+| | SPI RST | `GPIO 17` | RFID Hardware Reset |
+| | SPI MISO | `GPIO 19` | VSPI MISO Bus |
+| | SPI SCK | `GPIO 18` | Shared VSPI Clock Bus |
+| | SPI MOSI | `GPIO 23` | Shared VSPI MOSI Bus |
+| **MPU6050 IMU** | I2C SDA | `GPIO 21` | Hardware I2C Data (0x68) |
+| | I2C SCL | `GPIO 22` | Hardware I2C Clock |
+| **KY-023 Joystick**| VRx (X-Axis) | `GPIO 34` | ADC1 Analog Input (Sideways Mapped) |
+| | VRy (Y-Axis) | `GPIO 35` | ADC1 Analog Input |
+| | SW (Click) | `GPIO 33` | Digital Input (Internal Pullup) |
+| **Pushbuttons (4)** | Button 1 (Select) | `GPIO 25` | Active LOW (Internal Pullup) |
+| | Button 2 (Back) | `GPIO 26` | Active LOW (Internal Pullup) |
+| | Button 3 (Action) | `GPIO 14` | Active LOW (Internal Pullup) |
+| | Button 4 (Pause) | `GPIO 32` | Active LOW (Internal Pullup) |
+| **Status LEDs** | Green LED | `GPIO 13` | Digital Output (Auth Success / Live) |
+| | Red LED | `GPIO 15` | Digital Output (Auth Denied / Warning) |
+| **Piezo Buzzer** | Tone Audio | `GPIO 2` | PWM / LEDC Acoustic Feedback |
+
+---
 
 ## 🚀 Quick Start
 
+### 1. Install Dependencies
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start development server
+### 2. Start Development Server
+```bash
 npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser (Google Chrome or Edge recommended for Web Serial API support).
 
-# Build for production
+### 3. Production Build
+```bash
 npm run build
-
-# Preview production build
 npm run preview
 ```
 
-The game runs at `http://localhost:5173` by default.
+---
 
-## 🎯 Controls
+## 🎮 Exhibition Controls
 
-### Keyboard
-| Key | Action |
-|-----|--------|
-| WASD / Arrow Keys | Move character |
-| E / Enter | Interact with NPCs/objects |
-| Escape | Pause menu |
-| I | Open inventory |
-| J | Open journal |
-| Q | Open quest log |
-| M | Open world map |
+- **Mouse / Trackpad:** Click and drag to orbit 3D planets; scroll wheel to zoom in/out; click any planet or chip to select.
+- **Physical ESP32 Controller:**
+  - **RFID Reader:** Tap physical badge on RC522 to authenticate.
+  - **Joystick:** Navigate celestial lists and focus target planets.
+  - **Button 1 (Select):** Focus selected planet or confirm action.
+  - **Button 2 (Back):** Return to Solar System view or home overview.
+  - **MPU6050 Gyro:** Tilt physical controller to adjust 3D planetarium viewing angle.
+- **Demo Mode:** Click "ENTER DEMO MODE (NO HARDWARE)" on the login screen to explore all features instantly without physical controller connected.
 
-### Mouse
-- Click UI buttons for inventory, journal, quests
-- Click dialogue choices
-- Click map locations to travel
+---
 
-### ESP32 Controller (Optional)
-- Joystick: Movement
-- SELECT: Interact
-- BACK: Menu / Cancel
-- MAP: World map
-- JOURNAL: Open journal
-- RFID cards: Discover items
+## 📜 Technology Stack
 
-## 🗺️ Game World
-
-### Madrid (Starting City)
-1. **Plaza de la Llegada** — Central plaza with fountain, market, and NPCs
-2. **La Biblioteca Antigua** — Old library with puzzles and hidden passages
-3. **El Patio Secreto** — Hidden courtyard with rare discoveries
-
-### Other Cities (Unlocked through progression)
-- **Barcelona** — Mediterranean port city
-- **Sevilla** — Vibrant Andalusian capital
-- **Granada** — Moorish palace city
-- **Valencia** — Coastal orange grove city
-- **Toledo** — Medieval steel city
-
-## 📖 Story: The Secrets of the Forgotten Atlas
-
-You find an old illustrated atlas with missing pages. The remaining drawings point to hidden locations across Spain. As you investigate, you meet historians, artists, and gardeners who reveal that the atlas is connected to a forgotten network of explorers...
-
-## 🏗️ Project Structure
-
-```
-src/
-  components/     # React UI overlay components
-  game/
-    engine/       # Game loop, input, camera, collision
-    rendering/    # Procedural asset drawing
-  data/           # Cities, NPCs, quests, items, puzzles
-  systems/        # Quest engine, save/load, controller
-  types/          # TypeScript type definitions
-  styles/         # Global CSS
-
-firmware/         # ESP32 Arduino firmware
-
-public/
-  assets/         # Static assets
-```
-
-## 💳 RFID Login & Player Profile System
-
-España Explorer features physical NFC/RFID card authentication powered by the Web Serial API and an RC522 reader on the ESP32.
-
-### Login Flow:
-1. When opening the game, a full-screen illustrated **RFID Login Portal** appears.
-2. Connect your ESP32 controller via the **Conectar Mando** button (Web Serial API at 115200 baud).
-3. Scan your physical NFC/RFID card on the RC522 scanner.
-4. If the card UID matches a registered profile in `src/data/rfidCards.json`, the explorer is authenticated:
-   - Plays a medieval welcome chime
-   - Displays player name & role badge on the screen and on the ESP32 TFT
-   - Loads the player's personal saved progress (namespaced by `playerId`)
-   - Seamlessly enters gameplay at their saved location and city
-5. If the card is unknown or unauthorized, a clear alert is shown and access remains locked.
-6. A built-in **Simulador de Tarjetas** test panel allows testing registered explorer UIDs directly in the browser even without hardware.
-
-### Adding New Explorer Profiles:
-Edit `src/data/rfidCards.json` under `"players"`:
-```json
-{
-  "players": [
-    {
-      "uid": "04 A1 B2 C3",
-      "playerId": "explorer-01",
-      "displayName": "Explorer Mateo",
-      "role": "Master Cartographer",
-      "enabled": true
-    }
-  ]
-}
-```
-> **UID Normalization:** UID matching is case-insensitive and ignores spaces, colons, and hyphens (`04:A1:B2:C3`, `04 A1 B2 C3`, and `04A1B2C3` all match).
-
-### Controller Modes & Cooldown:
-- **Login Mode:** Scanning an authorized card authenticates the player profile.
-- **Gameplay Mode:** Scanning cards grants in-game relics or initiates quests.
-- **Mode Separation:** A cooldown prevents the card scanned during login from accidentally granting in-game item rewards upon entering the world.
-- **Logout:** In the Pause Menu ([ESC] or BACK button), click **Cambiar Tarjeta / Cerrar Sesión** to safely save and return to the login portal.
-
-## 🎮 ESP32 Controller Setup
-
-### Hardware Requirements
-- ESP32 development board
-- 1.8" SPI TFT display (ST7735)
-- RC522 RFID reader
-- MPU6050 accelerometer
-- KY-023 joystick (sideways mounting corrected in software)
-- 4 buttons (SELECT, BACK, MAP, JOURNAL)
-- 2 LEDs (Green, Red)
-- Buzzer
-
-### Arduino Libraries Required
-- Adafruit GFX Library
-- Adafruit ST7735
-- MFRC522
-- ArduinoJson
-
-### Pin Connections
-
-| Component | Pin | GPIO |
-|-----------|-----|------|
-| TFT CS | 5 | GPIO5 |
-| TFT DC | 27 | GPIO27 |
-| TFT RST | 4 | GPIO4 |
-| RFID SS | 16 | GPIO16 |
-| RFID RST | 17 | GPIO17 |
-| MPU SDA | 21 | GPIO21 |
-| MPU SCL | 22 | GPIO22 |
-| Joystick X | 34 | GPIO34 |
-| Joystick Y | 35 | GPIO35 |
-| Joystick SW | 33 | GPIO33 |
-| SELECT | 25 | GPIO25 |
-| BACK | 26 | GPIO26 |
-| MAP | 14 | GPIO14 |
-| JOURNAL | 32 | GPIO32 |
-| Green LED | 13 | GPIO13 |
-| Red LED | 15 | GPIO15 |
-| Buzzer | 2 | GPIO2 |
-
-### Firmware Upload
-1. Open `firmware/espana_explorer_controller.ino` in Arduino IDE
-2. Select "ESP32 Dev Module" as board
-3. Install required libraries via Library Manager (Adafruit GFX, Adafruit ST7735, MFRC522, ArduinoJson)
-4. Upload to ESP32
-5. Open Serial Monitor at 115200 baud to verify startup handshake
-
-### Connecting to Game
-1. Connect ESP32 via USB
-2. On the RFID Login screen, click **Conectar Mando**
-3. Select the ESP32 serial port in the browser dialog
-4. Once connected, the green indicator activates and the controller TFT displays ready status
-
-### RFID Card Configuration
-Edit `src/data/rfidCards.json` to map your NFC card UIDs to game items.
-Scan a card and check the ESP32 serial output to get its UID.
-
-> **Note:** USB serial communication must be tested on actual hardware. The Web Serial API requires Chrome/Edge on desktop. The game is fully playable with keyboard/mouse when no controller is connected.
-
-## 🔧 Technical Details
-
-- **Framework:** React 18 + TypeScript
-- **Build Tool:** Vite 5
-- **Rendering:** HTML5 Canvas 2D (procedural drawing)
-- **Persistence:** localStorage with versioned saves
-- **Controller:** Web Serial API (optional)
-- **No external APIs** — Works completely offline after install
-
-## 📝 Development Notes
-
-- The game uses procedural vector art drawn directly on Canvas
-- All assets are generated at runtime — no image files required
-- The asset renderer (`assetRenderer.ts`) contains all drawing functions
-- Environment objects are positioned in world coordinates and rendered relative to the camera
-- Y-sorting ensures proper depth ordering for characters and objects
-- The quest engine tracks objectives as stateful interactions
-- Save data is checksummed and version-migrated
-
-## 🐛 Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Blank screen | Check browser console for errors. Ensure `npm install` completed. |
-| Controller not connecting | Use Chrome/Edge. Check USB cable. Verify baud rate (115200). |
-| RFID not reading | Ensure RC522 is properly wired. Check SPI connections. |
-| Save data corrupt | Clear localStorage: `localStorage.removeItem('espana_explorer_save')` |
-| Fonts not loading | Check internet connection for Google Fonts, or use fallback fonts |
-
-## 📄 License
-
-This project is for educational and personal use. All game content, characters, and artwork are original creations.
+- **Frontend:** React 18, TypeScript, Vite
+- **3D Graphics:** Three.js, React Three Fiber (`@react-three/fiber`), Drei (`@react-three/drei`)
+- **Styling & UI:** Tailwind CSS, Lucide React, Framer Motion
+- **Controller Firmware:** ESP32 Arduino C++ with Adafruit GFX, Adafruit ST7735, MFRC522, ArduinoJson
