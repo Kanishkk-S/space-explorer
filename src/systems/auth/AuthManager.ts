@@ -355,6 +355,11 @@ export class AuthManager {
     this.notify();
   }
 
+  public saveStudentProfile(profile: StudentProfile): void {
+    this.currentStudent = { ...profile };
+    this.syncProfile();
+  }
+
   // Admin capabilities
   public getAllStudents(): StudentProfile[] {
     return Array.from(this.students.values());

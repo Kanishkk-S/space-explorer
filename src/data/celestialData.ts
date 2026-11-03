@@ -35,7 +35,7 @@ export const PLANETS_DATA: CelestialObject[] = [
     explorationHistory: [
       'Mariner 10 (1974-1975): First spacecraft flybys photographing 45% of the cratered surface.',
       'MESSENGER (2011-2015): Entered orbit, mapped global geochemical composition, and discovered water ice in polar shadow.',
-      'BepiColombo (ESA/JAXA, launched 2018): En route to study gravitational dynamo and exosphere interaction in 2026.'
+      'BepiColombo (ESA/JAXA, launched 2018): En route to study gravitational dynamo and exosphere interaction.'
     ],
     interestingFacts: [
       'A year on Mercury lasts only 88 days, but due to 3:2 spin-orbit resonance, a single solar day (sunrise to sunrise) takes 176 Earth days.',
@@ -110,7 +110,7 @@ export const PLANETS_DATA: CelestialObject[] = [
     interestingFacts: [
       'Earth is the densest major planet in our solar system at 5.51 g/cm³.',
       'Convective currents in the liquid outer iron core act as a geodynamo, shielding our atmosphere from solar wind stripping.',
-      'Earth’s axial tilt of 23.4° produces our annual cycle of seasons.'
+      'Earth’s axial tilt of 23.44° produces our annual cycle of seasons.'
     ],
     moons: ['moon']
   },
@@ -120,34 +120,34 @@ export const PLANETS_DATA: CelestialObject[] = [
     category: 'planet',
     hierarchyLevel: 'planet',
     parentObjectId: 'sun',
-    tagline: 'The Red Planet of Ancient Cataclysms',
+    tagline: 'The Red Planet & Ancient Water World',
     color: '#E05638',
-    overview: 'Mars is a cold desert world tinted red by iron oxide dust. While freeze-dried today, geologic records prove ancient Mars harbored warm freshwater lakes, rushing river deltas, and potentially a northern ocean.',
+    overview: 'Mars is a cold desert world with half Earth’s diameter, oxidized iron rust dust, and giant volcanic caldera structures. Ancient river valleys, deltas, and clay minerals confirm that liquid water flowed across its surface billions of years ago.',
     scientificData: {
       diameterKm: '6,779 km',
       distanceFromSunAU: '1.52 AU (227.9M km)',
-      gravityMps2: '3.721 m/s²',
-      avgTempC: '-63°C',
+      gravityMps2: '3.72 m/s²',
+      avgTempC: '-63°C (-81°F)',
       rotationPeriodHours: '24.62 hours (1 Sol)',
       revolutionPeriodDays: '687 Earth days',
       atmosphereComposition: ['Carbon Dioxide 95.3%', 'Nitrogen 2.6%', 'Argon 1.9%', 'Oxygen 0.16%'],
       knownMoonsCount: 2,
       parentPlanet: 'Sun'
     },
-    structure: 'Metallic core of iron, nickel, and sulfur (approx 1,800 km radius), silicate mantle, and thick volcanic basaltic crust enriched in iron minerals.',
-    atmosphere: 'Tenuous CO2 atmosphere (~0.6% Earth sea-level pressure) capable of hosting global dust storms that engulf the entire globe.',
-    surfaceFeatures: 'Olympus Mons (the solar system’s tallest volcano at 22 km height), Valles Marineris canyon (4,000 km length), and polar dry-ice caps.',
+    structure: 'Dense iron-nickel-sulfur core (approx 1,800 km radius), silicate mantle, and a thick single-plate basaltic crust unsegmented by active plate tectonics.',
+    atmosphere: 'Thin atmosphere (~0.6% of Earth’s sea level pressure) dominated by carbon dioxide, prone to planet-encircling seasonal dust storms.',
+    surfaceFeatures: 'Olympus Mons (tallest planetary shield volcano in the solar system, 21.9 km high) and Valles Marineris canyon system (4,000 km long).',
     explorationHistory: [
-      'Viking 1 & 2 (1976): First successful long-duration Mars landers.',
-      'Curiosity (2012-present): Discovered ancient organic molecules and evidence of habitable fluvio-lacustrine environments in Gale Crater.',
-      'Perseverance & Ingenuity (2021-present): First powered atmospheric flight on another world; caching core samples in Jezero Crater.'
+      'Mariner 9 (1971): First orbiter around Mars, discovering river networks and giant volcanoes.',
+      'Viking 1 & 2 (1976): First successful long-duration surface landers and biological life detection experiments.',
+      'Curiosity & Perseverance (2012, 2021-present): Nuclear-powered rover astrobiology exploring Gale and Jezero crater lakebeds.'
     ],
     interestingFacts: [
-      'Sunsets on Mars glow with an ethereal blue tint due to fine dust scattering long-wavelength red light.',
-      'Olympus Mons is so vast that its base would cover the entire state of Arizona.',
-      'Mars possesses two small captured asteroid moons: Phobos and Deimos.'
+      'Olympus Mons is nearly 3 times taller than Mount Everest and covers an area roughly the size of the state of Arizona.',
+      'Sunsets on Mars appear distinctly blue due to forward scattering of light by fine atmospheric dust particles.',
+      'Mars hosts two captured asteroidal moons, Phobos and Deimos; Phobos is spiraling inwards and will break up in ~50 million years.'
     ],
-    moons: ['phobos', 'deimos']
+    moons: []
   },
   {
     id: 'jupiter',
@@ -155,34 +155,34 @@ export const PLANETS_DATA: CelestialObject[] = [
     category: 'planet',
     hierarchyLevel: 'planet',
     parentObjectId: 'sun',
-    tagline: 'The Majestic Monarch of the Planets',
+    tagline: 'The Giant King of the Heliosphere',
     color: '#D4A373',
-    overview: 'Jupiter contains more than twice the mass of all other Solar System planets combined. A churning gas giant of hydrogen and helium, its atmospheric belts and centuries-old storm, the Great Red Spot, dominate planetary astronomy.',
+    overview: 'Jupiter contains more than twice the mass of all other planets combined. A gas giant composed mostly of hydrogen and helium, its counter-rotating atmospheric jet streams and the ancient Great Red Spot storm create a mesmerizing celestial vortex.',
     scientificData: {
       diameterKm: '139,820 km',
       distanceFromSunAU: '5.20 AU (778.5M km)',
       gravityMps2: '24.79 m/s²',
-      avgTempC: '-110°C (cloud deck)',
+      avgTempC: '-110°C',
       rotationPeriodHours: '9.93 hours (Fastest planetary spin)',
       revolutionPeriodDays: '4,333 Earth days (11.86 Earth years)',
       atmosphereComposition: ['Hydrogen 89.8%', 'Helium 10.2%', 'Methane 0.3%', 'Ammonia 0.026%'],
       knownMoonsCount: 95,
       parentPlanet: 'Sun'
     },
-    structure: 'Outer gaseous envelope transitioning under immense pressure into an ocean of liquid metallic hydrogen, surrounding a dense heavy-element core.',
-    atmosphere: 'Alternating eastward and westward jet streams producing vibrant light zones and dark belts with turbulent ammonia and water vapor vortexes.',
-    surfaceFeatures: 'The Great Red Spot (an anticyclonic storm larger than Earth raging for over 350 years), polar geometric cyclones, and faint dust rings.',
+    structure: 'Enormous central rocky/diffuse heavy-element core surrounded by a deep mantle of liquid metallic hydrogen conducting immense electrical currents, beneath molecular hydrogen gas.',
+    atmosphere: 'Dynamic stratosphere and troposphere striped into bright cold ammonia zones and dark warm belts, with wind speeds exceeding 540 km/h.',
+    surfaceFeatures: 'No solid surface. Atmospheric pressure transitions smoothly from gaseous atmosphere to liquid sea of metallic hydrogen.',
     explorationHistory: [
-      'Voyager 1 & 2 (1979): Discovered Jupiter’s rings and active sulfur volcanism on Io.',
-      'Galileo (1995-2003): Released atmospheric probe into the clouds and discovered evidence of Europa’s subsurface ocean.',
-      'Juno (2016-present): Investigating core mass distribution, intense polar auroras, and deep water abundance.'
+      'Pioneer 10 & 11 (1973-1974): First reconnaissance through the lethal Jovian radiation belts.',
+      'Voyager 1 & 2 (1979): Discovered active sulfur volcanism on Io and subsurface ocean potential on Europa.',
+      'Galileo (1995-2003) & Juno (2016-present): Orbital investigations of deep atmospheric water, magnetic dynamo, and lightning.'
     ],
     interestingFacts: [
-      'Jupiter’s magnetic field is the largest structure in the Solar System; if visible from Earth, it would appear larger than the full Moon.',
-      'Its rapid 9.9-hour rotation causes significant oblateness—its equatorial diameter is 9,275 km wider than its polar diameter.',
-      'It acts as a gravitational shield, deflecting or capturing comets like Shoemaker-Levy 9 that could otherwise threaten inner planets.'
+      'The Great Red Spot is an anticyclonic storm larger than the entire planet Earth that has raged continuously for at least 350 years.',
+      'Jupiter’s magnetic field is 14 times stronger than Earth’s, creating the largest structure in the solar system—a magnetosphere reaching past Saturn.',
+      'If Jupiter had formed with 80 times more mass, core hydrogen fusion would have ignited, turning it into a red dwarf star.'
     ],
-    moons: ['io', 'europa', 'ganymede', 'callisto']
+    moons: ['europa', 'io']
   },
   {
     id: 'saturn',
@@ -190,9 +190,9 @@ export const PLANETS_DATA: CelestialObject[] = [
     category: 'planet',
     hierarchyLevel: 'planet',
     parentObjectId: 'sun',
-    tagline: 'The Ringed Jewel of the Solar System',
+    tagline: 'The Ringed Jewel of the Cosmos',
     color: '#E0C588',
-    overview: 'Saturn is encircled by an awe-inspiring ring system spanning 282,000 kilometers yet measuring as thin as 10 to 30 meters. Composed of 99% pure water ice particles, it is the only planet with a density lower than liquid water.',
+    overview: 'Saturn is instantly recognizable for its breathtaking, razor-thin system of icy rings stretching 282,000 km across. It is the least dense planet in the solar system—the only world that would float in an ocean of water.',
     scientificData: {
       diameterKm: '116,460 km',
       distanceFromSunAU: '9.58 AU (1.43B km)',
@@ -200,24 +200,23 @@ export const PLANETS_DATA: CelestialObject[] = [
       avgTempC: '-140°C',
       rotationPeriodHours: '10.7 hours',
       revolutionPeriodDays: '10,759 Earth days (29.45 Earth years)',
-      atmosphereComposition: ['Hydrogen 96.3%', 'Helium 3.25%', 'Methane 0.45%'],
+      atmosphereComposition: ['Hydrogen 96.3%', 'Helium 3.25%', 'Methane 0.45%', 'Ammonia 0.026%'],
       knownMoonsCount: 146,
       parentPlanet: 'Sun'
     },
-    structure: 'Liquid hydrogen/helium mantle over liquid metallic hydrogen layer surrounding a rocky/icy core with a mass 9 to 22 times Earth.',
-    atmosphere: 'Muted pale yellow bands with equatorial jet streams reaching 1,800 km/h; features a permanent geometric hexagonal jet stream at its north pole.',
-    surfaceFeatures: 'The Ring System (Main Rings A, B, C and Cassini Division), North Polar Hexagon (30,000 km wide wave pattern).',
+    structure: 'Dense iron-rock-silicate core enveloped by liquid metallic hydrogen, followed by liquid molecular hydrogen and a golden ammonia cloud layer.',
+    atmosphere: 'Banded atmosphere dominated by east-west jet streams reaching 1,800 km/h. Its north pole features a persistent geometric hexagonal storm 30,000 km wide.',
+    surfaceFeatures: 'Spectacular main ring system (A, B, C rings with the Cassini Division), composed of billions of chunks of 99% pure water ice from dust grain to bus size.',
     explorationHistory: [
-      'Pioneer 11 & Voyagers (1979-1981): Discovered thousands of intricate ringlets and shepherd moons Prometheus and Pandora.',
-      'Cassini-Huygens (2004-2017): Landed the Huygens probe on Titan; discovered hydrothermal geysers erupting from Enceladus.',
-      'Cassini Grand Finale (2017): Dove 22 times between the rings and clouds before intentionally vaporizing in the atmosphere.'
+      'Pioneer 11 & Voyager 1 & 2 (1979-1981): First close-up imaging of intricate ringlet structures and Titan’s dense nitrogen atmosphere.',
+      'Cassini-Huygens (2004-2017): Spectacular 13-year mission; landed the Huygens probe on Titan and discovered hydrothermal cryovolcanoes on Enceladus.'
     ],
     interestingFacts: [
-      'With an average density of 0.687 g/cm³, Saturn would float if placed in an unimaginably vast ocean of water.',
-      'The North Polar Hexagon is a persistent atmospheric Rossby wave pattern rotating at the same speed as Saturn’s radio emissions.',
-      'Saturn possesses 146 confirmed moons, the most of any planet in the Solar System.'
+      'Saturn’s rings are on average only 10 to 30 meters thick despite spanning nearly 300,000 km across space.',
+      'Saturn has the lowest mean density of all planets (0.687 g/cm³)—lighter than liquid water.',
+      'The rings are losing mass at a rate of 10,000 kg per second through "ring rain" and will likely disappear within 100 to 300 million years.'
     ],
-    moons: ['titan', 'enceladus', 'mimas']
+    moons: ['titan', 'enceladus']
   },
   {
     id: 'uranus',
@@ -225,33 +224,32 @@ export const PLANETS_DATA: CelestialObject[] = [
     category: 'planet',
     hierarchyLevel: 'planet',
     parentObjectId: 'sun',
-    tagline: 'The Tilted Cyan Ice Realm',
+    tagline: 'The Sideways Ice Giant',
     color: '#7AC5CD',
-    overview: 'Uranus is an ice giant with a dramatic 98-degree axial tilt, causing it to orbit the Sun spinning virtually on its side. Its pale cyan-blue tint arises from atmospheric methane absorbing red photons.',
+    overview: 'Uranus is an ice giant with an axial tilt of 97.8°, meaning it rolls along its orbital path on its side. Its cyan atmosphere is enriched with methane ice crystals that absorb red light, giving it an ethereal aquamarine glow.',
     scientificData: {
       diameterKm: '50,724 km',
-      distanceFromSunAU: '19.2 AU (2.87B km)',
+      distanceFromSunAU: '19.22 AU (2.87B km)',
       gravityMps2: '8.69 m/s²',
-      avgTempC: '-195°C (Lowest recorded -224°C)',
+      avgTempC: '-195°C (-320°F, coldest planetary atmosphere)',
       rotationPeriodHours: '-17.24 hours (Retrograde)',
       revolutionPeriodDays: '30,687 Earth days (84 Earth years)',
-      atmosphereComposition: ['Hydrogen 83%', 'Helium 15%', 'Methane 2.3%'],
+      atmosphereComposition: ['Hydrogen 82.5%', 'Helium 15.2%', 'Methane 2.3%'],
       knownMoonsCount: 28,
       parentPlanet: 'Sun'
     },
-    structure: 'Dense slushy mantle of water, ammonia, and methane ices under extreme thermodynamic conditions, surrounding a small silicate-iron core.',
-    atmosphere: 'The coldest planetary atmosphere in the Solar System with diamond-ice precipitation models and faint dark ringlets.',
-    surfaceFeatures: 'Thirteen faint planetary rings and a severely lopsided magnetic field tilted 59 degrees from its rotational axis.',
+    structure: 'Small rocky core surrounded by a vast supercritical mantle of high-pressure water, ammonia, and methane "ice", under molecular hydrogen-helium gas.',
+    atmosphere: 'Extremely cold atmosphere with temperatures plunging to 49 Kelvin (-224°C). Subtle banding obscured by high-altitude photochemical haze.',
+    surfaceFeatures: 'Faint system of 13 dark narrow rings discovered in 1977, composed of carbon-rich refractory organic boulders.',
     explorationHistory: [
-      'William Herschel (1781): First planet discovered in recorded history using a telescope.',
-      'Voyager 2 (1986): Only spacecraft to conduct a close flyby, discovering 10 new moons and 2 new rings.'
+      'William Herschel (1781): First planet discovered using a telescope.',
+      'Voyager 2 (1986): Only spacecraft to visit Uranus, discovering 10 new moons, 2 rings, and its tilted magnetic field.'
     ],
     interestingFacts: [
-      'Because of its 98° tilt, each pole experiences 42 years of continuous direct sunlight followed by 42 years of dark winter.',
-      'Unlike other giant planets, Uranus radiates virtually no internal heat into space beyond what it absorbs from the distant Sun.',
-      'Its magnetic field is displaced from the planet’s physical center by a third of the planetary radius.'
+      'Because of its 98° axial tilt, each pole gets 42 years of continuous direct sunlight followed by 42 years of polar darkness.',
+      'Its magnetic field is tilted 59° away from its rotational axis and offset from the center of the planet by one-third of its radius.'
     ],
-    moons: ['miranda', 'titania', 'oberon']
+    moons: []
   },
   {
     id: 'neptune',
@@ -259,12 +257,12 @@ export const PLANETS_DATA: CelestialObject[] = [
     category: 'planet',
     hierarchyLevel: 'planet',
     parentObjectId: 'sun',
-    tagline: 'The Supersonic Azure Ice Giant',
+    tagline: 'The Supersonic Storm World',
     color: '#4973FF',
-    overview: 'Neptune is the most distant major planet in the Solar System. An ice giant of intense lapis lazuli blue, it endures supersonic storms where winds whip faster than the speed of sound.',
+    overview: 'Neptune is the outermost major planet, an ice giant glowing in deep azure blue. Despite receiving only 0.1% of Earth’s sunlight, it drives the most violent supersonic winds in the solar system, exceeding 2,100 km/h.',
     scientificData: {
       diameterKm: '49,244 km',
-      distanceFromSunAU: '30.07 AU (4.50B km)',
+      distanceFromSunAU: '30.05 AU (4.50B km)',
       gravityMps2: '11.15 m/s²',
       avgTempC: '-201°C',
       rotationPeriodHours: '16.11 hours',
@@ -273,99 +271,164 @@ export const PLANETS_DATA: CelestialObject[] = [
       knownMoonsCount: 16,
       parentPlanet: 'Sun'
     },
-    structure: 'Hot supercritical fluid mantle of water, methane, and ammonia ices enveloped over a rocky terrestrial-mass core.',
-    atmosphere: 'Dynamic atmosphere with bright white cirrus clouds of methane ice crystals and supersonic storms exceeding 2,100 km/h (Mach 1.7).',
-    surfaceFeatures: 'The Great Dark Spot (an Earth-sized anti-cyclonic storm system), five faint rings, and active ring arcs.',
+    structure: 'Solid silicate/iron core surrounded by a dense fluid mantle of ionic water, ammonia, and methane, under a deep atmospheric envelope.',
+    atmosphere: 'Deep blue color caused by an unidentified atmospheric chromophore beyond methane. Hosts transient high-altitude methane cirrus clouds and dark anticyclonic vortices.',
+    surfaceFeatures: 'Dark vortex systems (such as the Great Dark Spot discovered by Voyager 2) and 5 faint dusty rings with clumpy orbital arcs.',
     explorationHistory: [
-      'Le Verrier & Galle (1846): Located purely by mathematical prediction of orbital perturbations in Uranus’ trajectory.',
-      'Voyager 2 (1989): Historic flyby capturing cloud dynamics, ring arcs, and active nitrogen geysers on moon Triton.'
+      'Urbain Le Verrier & Johann Galle (1846): First planet discovered purely through mathematical predictions of orbital perturbations in Uranus.',
+      'Voyager 2 (1989): Historic flyby providing the only close-up images of Neptune, its ring arcs, and cryogeysers on Triton.'
     ],
     interestingFacts: [
-      'Neptune has completed only one full orbit since its mathematical discovery in 1846 (achieved in 2011).',
-      'Its largest moon, Triton, orbits backward (retrograde) and is a captured Kuiper Belt dwarf planet.',
-      'Neptune generates 2.6 times more internal heat than it receives from solar radiation.'
+      'Neptune’s supersonic winds reach up to 2,160 km/h (1,340 mph)—faster than the speed of sound in air on Earth.',
+      'Since its discovery in 1846, Neptune completed its first single 165-year orbit around the Sun in 2011.'
     ],
     moons: ['triton']
   }
 ];
 
 // ============================================================
-// 2. DWARF PLANETS & ASTEROIDS
+// 2. ROOT SOLAR SYSTEM
+// ============================================================
+export const ROOT_SOLAR_SYSTEM: CelestialObject = {
+  id: 'solar_system',
+  name: 'The Solar System',
+  category: 'solar_system',
+  hierarchyLevel: 'star_system',
+  parentObjectId: 'milky_way',
+  tagline: 'Our Gravitationally Bound Heliocentric Domain',
+  color: '#5B8CFF',
+  overview: 'The Solar System consists of our G-type star (the Sun), eight major planets, 5 recognized dwarf planets, hundreds of moons, millions of asteroids in the Main Belt, and billions of icy bodies in the Kuiper Belt and Oort Cloud.',
+  scientificData: {
+    diameterKm: '100,000 AU across (Outer Oort Cloud)',
+    distanceFromEarthLy: '0 light-years (Our home system)',
+    distanceFromSunAU: '0 to 100,000 AU',
+    constellation: 'Orion Cygnus Arm'
+  },
+  interestingFacts: [
+    'The Sun contains 99.86% of all mass in the entire Solar System.',
+    'The boundary of the heliosphere (heliopause) is where the solar wind meets the interstellar medium, crossed by Voyager 1 in 2012.'
+  ]
+};
+
+// ============================================================
+// 3. DWARF PLANETS & ASTEROIDS
 // ============================================================
 export const DWARF_PLANETS: CelestialObject[] = [
   {
     id: 'pluto',
-    name: 'Pluto (134340 Pluto)',
+    name: 'Pluto',
     category: 'dwarf_planet',
     hierarchyLevel: 'dwarf_planet',
     parentObjectId: 'sun',
-    tagline: 'The Heart of the Kuiper Belt',
+    tagline: 'King of the Kuiper Belt with a Heart of Nitrogen Ice',
     color: '#D2B48C',
-    overview: 'Pluto is the king of the Kuiper Belt. Far from a dead frozen rock, New Horizons revealed a world of nitrogen glaciers, towering water-ice mountain ranges, and active cryo-geology.',
+    overview: 'Once classified as the ninth planet, Pluto is the largest Kuiper Belt Object. In 2015, NASA’s New Horizons spacecraft revealed a surprisingly young, geologically active world with soaring water-ice mountains and the smooth nitrogen glacier Sputnik Planitia.',
     scientificData: {
-      diameterKm: '2,376 km',
-      distanceFromSunAU: '39.48 AU (5.9B km)',
+      diameterKm: '2,377 km',
+      distanceFromSunAU: '39.48 AU (5.91B km)',
       gravityMps2: '0.62 m/s²',
       avgTempC: '-230°C',
-      revolutionPeriodDays: '90,560 Earth days (248 years)',
+      rotationPeriodHours: '-153.3 hours (6.39 days)',
+      revolutionPeriodDays: '90,560 Earth days (248 Earth years)',
       atmosphereComposition: ['Nitrogen 99%', 'Methane 0.5%', 'Carbon Monoxide 0.05%'],
       knownMoonsCount: 5,
       parentPlanet: 'Sun'
     },
     interestingFacts: [
-      'Sputnik Planitia is an enormous 1,000-km glacier of convective nitrogen ice shaped like a glowing heart.',
-      'Pluto and its largest moon Charon are tidally locked mutually; they orbit a common barycenter situated above Pluto’s surface.',
-      'Towering mountains of pure water ice rise 3.5 kilometers high into its tenuous blue-tinted atmosphere.'
+      'Pluto and its largest moon Charon form a binary system; they are mutually tidally locked, facing each other permanently.',
+      'Sputnik Planitia is a massive 1,000-km heart-shaped plain of churning nitrogen and carbon monoxide ice.'
     ]
   },
   {
     id: 'ceres',
-    name: 'Ceres (1 Ceres)',
+    name: 'Ceres',
     category: 'dwarf_planet',
     hierarchyLevel: 'dwarf_planet',
     parentObjectId: 'sun',
-    tagline: 'The Queen of the Asteroid Belt',
-    color: '#8C8C8C',
-    overview: 'Ceres is the largest object in the Main Asteroid Belt between Mars and Jupiter, comprising a third of the belt’s total mass. NASA Dawn confirmed it is a relic ocean world rich in water ice and sodium carbonate salts.',
+    tagline: 'Queen of the Main Asteroid Belt',
+    color: '#A0A0A0',
+    overview: 'Ceres is the largest object in the Main Asteroid Belt between Mars and Jupiter. Classified as a dwarf planet in 2006, NASA’s Dawn mission discovered bright sodium carbonate salt deposits in Occator Crater and evidence of a relict subsurface ocean.',
     scientificData: {
       diameterKm: '939 km',
       distanceFromSunAU: '2.77 AU (414M km)',
       gravityMps2: '0.27 m/s²',
-      avgTempC: '-105°C',
-      revolutionPeriodDays: '1,682 Earth days (4.6 years)',
+      avgTempC: '-106°C',
+      rotationPeriodHours: '9.07 hours',
+      revolutionPeriodDays: '1,682 Earth days (4.6 Earth years)',
+      knownMoonsCount: 0,
       parentPlanet: 'Sun'
     },
     interestingFacts: [
-      'Occator Crater contains brilliant reflective salt domes (Cerealia Facula) left behind by subterranean brine eruptions.',
-      'Ceres contains more water ice by volume than all the freshwater on Earth combined.',
-      'It is the only dwarf planet located inside the inner Solar System.'
+      'Ceres contains roughly one-third of the total mass of the entire asteroid belt.',
+      'Ahuna Mons is a 4-kilometer-tall cryovolcanic dome that erupted salty mud and brine rather than molten rock.'
     ]
   },
   {
     id: 'eris',
-    name: 'Eris (136199 Eris)',
+    name: 'Eris',
     category: 'dwarf_planet',
     hierarchyLevel: 'dwarf_planet',
     parentObjectId: 'sun',
-    tagline: 'The Trans-Neptunian Titan',
-    color: '#E0E0E0',
-    overview: 'Eris is one of the most massive dwarf planets in the scattered disc. Its discovery in 2005 prompted the International Astronomical Union (IAU) to officially define the term "planet".',
+    tagline: 'The Distant World That Redefined the Planets',
+    color: '#EFEFEF',
+    overview: 'Discovered in 2005 at the far edge of the scattered disc, Eris is 27% more massive than Pluto. Its discovery directly prompted the International Astronomical Union (IAU) to formalize the scientific definition of a planet.',
     scientificData: {
       diameterKm: '2,326 km',
-      distanceFromSunAU: '67.7 AU (10.1B km)',
+      distanceFromSunAU: '67.8 AU (10.1B km)',
+      gravityMps2: '0.82 m/s²',
       avgTempC: '-243°C',
-      revolutionPeriodDays: '203,830 Earth days (558 years)',
+      revolutionPeriodDays: '203,830 Earth days (558 Earth years)',
+      knownMoonsCount: 1,
       parentPlanet: 'Sun'
     },
     interestingFacts: [
-      'Eris is 27% more massive than Pluto, despite being slightly smaller in diameter.',
-      'Its surface has an albedo of 0.96, reflecting nearly all sunlight due to a pristine coat of frozen methane glaze.'
+      'Eris is one of the most reflective bodies in the solar system (albedo 0.96) because its methane atmosphere freezes onto the surface like fresh snow.'
+    ]
+  }
+];
+
+export const ASTEROIDS_AND_COMETS: CelestialObject[] = [
+  {
+    id: 'vesta',
+    name: '4 Vesta',
+    category: 'asteroid',
+    hierarchyLevel: 'asteroid_comet',
+    parentObjectId: 'sun',
+    tagline: 'The Differentiated Rocky Protoplanet',
+    color: '#B5A895',
+    overview: 'Vesta is the second most massive asteroid in the main belt, an intact protoplanet from the solar system’s dawn with a metallic core, basaltic crust, and massive south polar impact craters (Rheasilvia).',
+    scientificData: {
+      diameterKm: '525 km',
+      distanceFromSunAU: '2.36 AU',
+      gravityMps2: '0.25 m/s²'
+    },
+    interestingFacts: [
+      'Roughly 5% of all meteorites recovered on Earth originate from debris blasted off Vesta during ancient collisions (HED meteorites).'
+    ]
+  },
+  {
+    id: 'halley_comet',
+    name: "1P/Halley (Halley's Comet)",
+    category: 'comet',
+    hierarchyLevel: 'asteroid_comet',
+    parentObjectId: 'sun',
+    tagline: 'The Historic Periodic Cosmic Wanderer',
+    color: '#85C1E9',
+    overview: 'Halley’s Comet is the most famous periodic comet, returning to the inner solar system every 75 to 76 years. Its nucleus is an icy conglomerate of water, carbon monoxide, methane, and dark organic refractory dust.',
+    scientificData: {
+      diameterKm: '15 x 8 km (Nucleus)',
+      distanceFromSunAU: '0.59 to 35.1 AU',
+      revolutionPeriodDays: '75.3 years'
+    },
+    interestingFacts: [
+      'Giotto spacecraft (1986) flew within 596 km of Halley’s nucleus, capturing the first direct images of active comet gas jets.',
+      'Debris shed by Halley creates two annual meteor showers on Earth: the Eta Aquariids (May) and Orionids (October).'
     ]
   }
 ];
 
 // ============================================================
-// 3. SCIENTIFICALLY CRITICAL MOONS
+// 4. NATURAL SATELLITES & MOONS
 // ============================================================
 export const MOONS_DATA: CelestialObject[] = [
   {
@@ -374,20 +437,23 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'earth',
-    tagline: 'Earth’s Ancient Celestial Anchor',
-    color: '#C4C4C4',
-    overview: 'Earth’s only natural satellite was forged 4.5 billion years ago in the Giant Impact Hypothesis (Theia collision). It stabilizes Earth’s orbital precession, produces ocean tides, and preserves craters from the Late Heavy Bombardment.',
+    tagline: 'Earth’s Faithful Celestial Guardian',
+    color: '#E0E0E0',
+    overview: 'Earth’s only natural satellite was born 4.5 billion years ago when a Mars-sized protoplanet (Theia) collided with proto-Earth. It stabilizes Earth’s axial tilt, preventing extreme climate swings, and drives oceanic tidal cycles.',
     scientificData: {
       diameterKm: '3,474 km',
+      distanceFromSunAU: '1.00 AU',
       distanceFromEarthLy: '384,400 km',
-      gravityMps2: '1.62 m/s²',
+      gravityMps2: '1.62 m/s² (1/6th Earth)',
       avgTempC: '-130°C to 120°C',
+      rotationPeriodHours: '655.7 hours (27.3 Earth days, Tidally Locked)',
+      revolutionPeriodDays: '27.3 days',
+      knownMoonsCount: 0,
       parentPlanet: 'Earth'
     },
     interestingFacts: [
-      'The Moon is in synchronous rotation: the same lunar face permanently points toward Earth.',
-      'Apollo astronauts left laser retroreflector arrays on the surface that still measure lunar recession (~3.8 cm per year) to millimeter precision.',
-      'Permanently shadowed craters at the lunar South Pole contain gigatons of primordial water ice.'
+      'The Moon is tidally locked to Earth; we always see the same lunar face from Earth.',
+      'Between 1969 and 1972, twelve human astronauts walked on the lunar surface during NASA’s Apollo program.'
     ]
   },
   {
@@ -396,19 +462,20 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'jupiter',
-    tagline: 'The Subsurface Saltwater Ocean World',
-    color: '#EADBC8',
-    overview: 'Europa is one of Jupiter’s Galilean moons. Beneath an outer crust of fractured water ice lies a global liquid ocean containing more than double the volume of all Earth’s oceans combined, kept warm by tidal dissipation.',
+    tagline: 'The Ice-Crusted Ocean World of Potential Life',
+    color: '#D9C8B4',
+    overview: 'One of the four Galilean moons of Jupiter, Europa is encased in a 15-25 km thick water-ice shell fractured by red tectonic lineae. Beneath this frozen crust lies a global liquid saltwater ocean containing more water than all of Earth’s oceans combined.',
     scientificData: {
       diameterKm: '3,121 km',
+      distanceFromSunAU: '5.20 AU',
       gravityMps2: '1.315 m/s²',
-      avgTempC: '-160°C',
+      avgTempC: '-160°C to -220°C',
+      revolutionPeriodDays: '3.55 Earth days',
       parentPlanet: 'Jupiter'
     },
     interestingFacts: [
-      'Hydrothermal vents on Europa’s ocean floor could provide chemical energy to sustain extraterrestrial microbial life.',
-      'Its icy surface is one of the smoothest in the solar system, crisscrossed by dark reddish fractures called lineae.',
-      'NASA Europa Clipper (launched 2024) is flying toward Jupiter to perform 49 low-altitude habitability flybys.'
+      'Europa’s subsurface ocean is kept warm and liquid by gravitational tidal flexing caused by resonance with Io and Ganymede.',
+      'NASA launched the Europa Clipper mission in 2024 to determine if conditions in its ocean could support microbial life.'
     ]
   },
   {
@@ -417,20 +484,21 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'saturn',
-    tagline: 'The Prebiotic Moon of Methane Seas',
-    color: '#D29C44',
-    overview: 'Titan is Saturn’s largest moon and the only moon in the Solar System with a dense, nitrogen-rich atmosphere. It features a complete meteorological cycle with methane clouds, methane rainfall, and lakes of liquid ethane and methane.',
+    tagline: 'The Methane Rain & Liquid Hydrocarbon World',
+    color: '#E5A65D',
+    overview: 'Titan is Saturn’s largest moon and the only moon in the solar system with a dense atmosphere (1.5 atmospheres of pressure). It hosts a complete hydrological cycle of methane and ethane clouds, rain, rivers, and seas (Kraken Mare).',
     scientificData: {
-      diameterKm: '5,150 km',
-      gravityMps2: '1.352 m/s²',
-      avgTempC: '-179°C',
-      atmosphereComposition: ['Nitrogen 95%', 'Methane 5%'],
+      diameterKm: '5,150 km (Larger than Mercury)',
+      distanceFromSunAU: '9.58 AU',
+      gravityMps2: '1.35 m/s²',
+      avgTempC: '-179°C (-290°F)',
+      revolutionPeriodDays: '15.95 Earth days',
+      atmosphereComposition: ['Nitrogen 95%', 'Methane 4.9%', 'Hydrogen 0.1%'],
       parentPlanet: 'Saturn'
     },
     interestingFacts: [
-      'Kraken Mare is a liquid hydrocarbon sea larger than the Caspian Sea on Earth.',
-      'Its dense atmosphere and low gravity mean a human strapped with artificial wings could take flight by flapping their arms.',
-      'NASA Dragonfly mission will deploy an octocopter to fly across Titan’s dunes in the 2030s.'
+      'In 2005, ESA’s Huygens probe descended through Titan’s golden orange smog and touched down on pebble-strewn water-ice shores.',
+      'NASA’s Dragonfly rotorcraft mission will fly across Titan’s organic sand dunes in the 2030s.'
     ]
   },
   {
@@ -439,19 +507,20 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'saturn',
-    tagline: 'The Cryovolcanic Geyser Moon',
+    tagline: 'The Geyser Moon with Hydrothermal Vents',
     color: '#FFFFFF',
-    overview: 'Enceladus is a brilliant white moon that sprays ocean water into space. Cassini discovered active cryovolcanic plumes erupting from south-polar "tiger stripe" fractures, carrying salts, silica, and complex organic macromolecules.',
+    overview: 'Enceladus is a small, brilliant white moon of Saturn with the highest albedo in the solar system. Over 100 cryovolcanic geysers at its south pole blast plumes of water vapor, organic molecules, and silica grains directly into space from a global subsurface ocean.',
     scientificData: {
       diameterKm: '504 km',
+      distanceFromSunAU: '9.58 AU',
       gravityMps2: '0.113 m/s²',
       avgTempC: '-198°C',
+      revolutionPeriodDays: '1.37 Earth days',
       parentPlanet: 'Saturn'
     },
     interestingFacts: [
-      'It reflects nearly 99% of sunlight, making it the most reflective celestial body in the Solar System.',
-      'Cassini detected molecular hydrogen (H2) in its plumes, a signature of active hydrothermal serpentinization.',
-      'Plumes of water vapor and ice crystals from Enceladus continuously replenish Saturn’s vast E-ring.'
+      'Cassini flew directly through Enceladus’ plumes, detecting molecular hydrogen (H2), methane, and complex organics—indicative of alkaline hydrothermal vents like those where life began on Earth.',
+      'Plumes from Enceladus constantly replenish Saturn’s diffuse E ring.'
     ]
   },
   {
@@ -460,18 +529,20 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'jupiter',
-    tagline: 'The Volcanic Cauldron of Jupiter',
+    tagline: 'The Volcanic Hellscape of Jupiter',
     color: '#F4D03F',
-    overview: 'Io is the most geologically violent world known, caught in a gravitational tug-of-war between Jupiter, Europa, and Ganymede that generates ferocious tidal friction and hundreds of active volcanoes.',
+    overview: 'Io is the most volcanically active body in the solar system, boasting over 400 active volcanoes. Continuous tidal heating from Jupiter and neighboring moons generates subterranean tides that flex Io’s rock up and down by 100 meters daily.',
     scientificData: {
       diameterKm: '3,643 km',
+      distanceFromSunAU: '5.20 AU',
       gravityMps2: '1.796 m/s²',
-      avgTempC: '-130°C to 1,200°C (lava lakes)',
+      avgTempC: '-130°C (Volcanic hotspots up to 1,300°C)',
+      revolutionPeriodDays: '1.77 Earth days',
       parentPlanet: 'Jupiter'
     },
     interestingFacts: [
-      'Volcanic plumes on Io can shoot up to 500 kilometers above the surface into the vacuum of space.',
-      'Loki Patera is an active volcanic lake over 200 kilometers across, periodically covered in sinking crust slabs.'
+      'Lava fountains on Io shoot sulfur dioxide plumes over 500 kilometers high into space.',
+      'Its surface has no impact craters because fresh volcanic basalt and sulfur lava continuously repave the moon.'
     ]
   },
   {
@@ -480,24 +551,25 @@ export const MOONS_DATA: CelestialObject[] = [
     category: 'moon',
     hierarchyLevel: 'moon',
     parentObjectId: 'neptune',
-    tagline: 'The Captured Cryogenic Geyser World',
-    color: '#A0D2EB',
-    overview: 'Triton is Neptune’s largest moon. It orbits in the opposite direction of Neptune’s rotation, proving it was a dwarf planet captured from the Kuiper Belt by Neptune’s gravity.',
+    tagline: 'The Captured Retrograde Cryogenic Moon',
+    color: '#A9DFBF',
+    overview: 'Triton is Neptune’s largest moon and the only large moon in the solar system orbiting retrograde (backwards). Likely a captured dwarf planet from the Kuiper Belt, it boasts active nitrogen geysers and a cantaloupe-patterned terrain.',
     scientificData: {
       diameterKm: '2,706 km',
+      distanceFromSunAU: '30.05 AU',
       gravityMps2: '0.779 m/s²',
-      avgTempC: '-235°C',
+      avgTempC: '-235°C (38 Kelvin)',
+      revolutionPeriodDays: '-5.88 Earth days (Retrograde)',
       parentPlanet: 'Neptune'
     },
     interestingFacts: [
-      'Voyager 2 photographed geysers erupting liquid nitrogen and black soot 8 kilometers into its tenuous sky.',
-      'Triton’s surface resembles the rind of a cantaloupe, caused by diapiric overturn of dirty water ice.'
+      'Triton is slowly spiraling toward Neptune due to tidal friction; in ~3.6 billion years it will cross Neptune’s Roche limit and shatter into a massive ring system.'
     ]
   }
 ];
 
 // ============================================================
-// 4. EXOPLANETS & ALIEN WORLDS
+// 5. EXOPLANETS & ALIEN WORLDS
 // ============================================================
 export const EXOPLANETS_DATA: CelestialObject[] = [
   {
@@ -506,21 +578,21 @@ export const EXOPLANETS_DATA: CelestialObject[] = [
     category: 'exoplanet',
     hierarchyLevel: 'exoplanet',
     parentObjectId: 'proxima_centauri',
-    tagline: 'Our Closest Potentially Habitable Neighbor',
-    color: '#D47E60',
-    overview: 'Proxima b is an Earth-mass exoplanet orbiting within the habitable zone of Proxima Centauri, the closest star to our Solar System at 4.24 light-years.',
+    tagline: 'Our Nearest Earth-Sized Interstellar Neighbor',
+    color: '#82CCDD',
+    overview: 'Proxima b orbits inside the habitable zone of Proxima Centauri, our closest stellar neighbor just 4.24 light-years away. With a minimum mass of 1.07 Earths, it receives 65% of Earth’s solar flux, but endures intense stellar flares.',
     scientificData: {
-      diameterKm: '~13,700 km (1.08 Earths)',
+      diameterKm: '~13,000 km (estimated)',
       distanceFromEarthLy: '4.244 light-years',
+      gravityMps2: '10.5 m/s²',
       revolutionPeriodDays: '11.2 Earth days',
-      hostStar: 'Proxima Centauri (Red Dwarf)',
+      hostStar: 'Proxima Centauri (M-dwarf)',
       discoveryYear: 2016,
-      discoveryMethod: 'Radial Velocity (HARPS)'
+      discoveryMethod: 'Radial Velocity (HARPS spectrometer)'
     },
-    isConfirmed: true,
     interestingFacts: [
-      'It orbits only 7.5 million kilometers from its host star—closer than Mercury is to our Sun—yet receives similar radiant flux because its star is a cool red dwarf.',
-      'Proxima Centauri emits violent superflares, subjecting Proxima b to extreme stellar wind and coronal mass ejections.'
+      'At current chemical rocket speeds (approx 56,000 km/h), reaching Proxima b would take ~80,000 years.',
+      'It is likely tidally locked, having a permanent daylight hemisphere and a perpetual frozen night hemisphere.'
     ]
   },
   {
@@ -529,21 +601,22 @@ export const EXOPLANETS_DATA: CelestialObject[] = [
     category: 'exoplanet',
     hierarchyLevel: 'exoplanet',
     parentObjectId: 'trappist_1',
-    tagline: 'The Seven-Sister Oceanic Candidate',
-    color: '#4B88A2',
-    overview: 'TRAPPIST-1e is an Earth-sized rocky exoplanet orbiting within the habitable zone of ultra-cool dwarf star TRAPPIST-1, located 39.5 light-years away in Aquarius.',
+    tagline: 'The Prime Candidate for Extraterrestrial Oceans',
+    color: '#48DBFB',
+    overview: 'TRAPPIST-1e is one of seven Earth-sized worlds orbiting an ultra-cool red dwarf star 39 light-years away. Among all known rocky exoplanets, it has an Earth Similarity Index of 0.85, consistent with an iron-rich core and liquid water oceans.',
     scientificData: {
-      diameterKm: '11,700 km (0.92 Earths)',
+      diameterKm: '11,720 km (0.92 Earth radii)',
       distanceFromEarthLy: '39.46 light-years',
-      revolutionPeriodDays: '6.1 Earth days',
+      gravityMps2: '9.12 m/s²',
+      avgTempC: '-22°C (Equilibrium)',
+      revolutionPeriodDays: '6.1 days',
       hostStar: 'TRAPPIST-1',
       discoveryYear: 2017,
-      discoveryMethod: 'Transit (Spitzer Space Telescope)'
+      discoveryMethod: 'Transit Photometry (Spitzer / Trappist)'
     },
-    isConfirmed: true,
     interestingFacts: [
-      'TRAPPIST-1 contains 7 terrestrial Earth-sized planets packed so tightly that standing on TRAPPIST-1e, neighboring planets would appear larger in the sky than the full Moon.',
-      'Atmospheric transmission spectra are actively being observed by the James Webb Space Telescope (JWST).'
+      'All seven planets of the TRAPPIST-1 system orbit within a distance smaller than Mercury’s distance from the Sun.',
+      'From the surface of TRAPPIST-1e, sister planets appear several times larger in the sky than the Moon appears from Earth.'
     ]
   },
   {
@@ -551,28 +624,24 @@ export const EXOPLANETS_DATA: CelestialObject[] = [
     name: 'Kepler-186f',
     category: 'exoplanet',
     hierarchyLevel: 'exoplanet',
-    parentObjectId: 'kepler_186',
-    tagline: 'The First Validated Earth-Size Habitable World',
-    color: '#88D49E',
-    overview: 'Kepler-186f was the first confirmed Earth-size planet discovered in the habitable zone of another star, located roughly 582 light-years away in Cygnus.',
+    tagline: 'The First Earth-Size Planet in a Habitable Zone',
+    color: '#1DD1A1',
+    overview: 'Discovered by NASA’s Kepler Space Telescope in 2014, Kepler-186f was the first validated Earth-sized exoplanet orbiting within the habitable zone of its host star where liquid water could pool.',
     scientificData: {
-      diameterKm: '14,900 km (1.17 Earths)',
+      diameterKm: '14,900 km (1.17 Earth radii)',
       distanceFromEarthLy: '582 light-years',
       revolutionPeriodDays: '129.9 Earth days',
-      hostStar: 'Kepler-186 (M1 Dwarf)',
-      discoveryYear: 2014,
-      discoveryMethod: 'Transit (Kepler Mission)'
+      hostStar: 'Kepler-186 (M-type dwarf)',
+      discoveryYear: 2014
     },
-    isConfirmed: true,
     interestingFacts: [
-      'Its host star is an M-dwarf, meaning its midday brightness on the surface is equivalent to Earth an hour before sunset.',
-      'Photosynthesis, if present on Kepler-186f, would likely absorb infrared photons, resulting in reddish or black vegetation.'
+      'High noon on Kepler-186f appears only as bright as an hour before sunset on Earth because its star emits primarily infrared energy.'
     ]
   }
 ];
 
 // ============================================================
-// 5. NOTABLE STARS & STELLAR GIANTS
+// 6. STARS, STAR SYSTEMS & CONSTELLATIONS
 // ============================================================
 export const STARS_DATA: CelestialObject[] = [
   {
@@ -581,40 +650,19 @@ export const STARS_DATA: CelestialObject[] = [
     category: 'star',
     hierarchyLevel: 'star',
     parentObjectId: 'milky_way',
-    tagline: 'The Stellar Hearth of our Solar System',
-    color: '#FFB300',
-    overview: 'The Sun is a G-type main-sequence star (G2V) containing 99.86% of the mass of the Solar System. Thermonuclear proton-proton fusion in its core fuses 600 million tons of hydrogen into helium every second.',
+    tagline: 'The Heart of the Solar System',
+    color: '#F5A623',
+    overview: 'A G-type main-sequence star (Yellow Dwarf) containing 99.86% of all mass in our solar system. In its core, gravity and 15-million-degree temperatures fuse 600 million tons of hydrogen into helium every second via the proton-proton chain.',
     scientificData: {
       diameterKm: '1,392,700 km (109 Earths)',
-      distanceFromEarthLy: '8.3 light-minutes (1 AU)',
-      avgTempC: '5,500°C (Surface) / 15,000,000°C (Core)',
-      spectralType: 'G2V Main Sequence Yellow Dwarf',
-      constellation: 'Center of Solar System'
+      distanceFromEarthLy: '8.3 light-minutes (149.6M km)',
+      avgTempC: '5,500°C (Surface), 15,000,000°C (Core)',
+      rotationPeriodHours: '600 hours (25 days at equator)',
+      spectralType: 'G2V Main Sequence'
     },
     interestingFacts: [
-      'Approximately 1.3 million Earths could fit inside the Sun.',
-      'Photons created by nuclear fusion take over 100,000 years to diffuse outward through the dense radiative zone to reach space.'
-    ]
-  },
-  {
-    id: 'sirius',
-    name: 'Sirius (Alpha Canis Majoris)',
-    category: 'star',
-    hierarchyLevel: 'star',
-    parentObjectId: 'milky_way',
-    tagline: 'The Blazing Dog Star',
-    color: '#E0F7FA',
-    overview: 'Sirius is the brightest star in the night sky with an apparent visual magnitude of -1.46. It is a binary system consisting of a luminous A-type main-sequence star and a faint white dwarf companion, Sirius B.',
-    scientificData: {
-      diameterKm: '2,380,000 km (1.71 Solar radii)',
-      distanceFromEarthLy: '8.60 light-years',
-      avgTempC: '9,940 K',
-      spectralType: 'A1V + DA2',
-      constellation: 'Canis Major'
-    },
-    interestingFacts: [
-      'Sirius B was the first white dwarf star discovered; its mass equals the Sun packed into a sphere no larger than Earth.',
-      'Sirius is gradually approaching the Solar System and will continue brightening over the next 60,000 years.'
+      'Energy generated in the core takes between 10,000 and 170,000 years to reach the surface through radiative diffusion.',
+      'Every second, the Sun converts 4.26 million tons of matter directly into radiant electromagnetic energy according to E=mc².'
     ]
   },
   {
@@ -623,84 +671,117 @@ export const STARS_DATA: CelestialObject[] = [
     category: 'star',
     hierarchyLevel: 'star',
     parentObjectId: 'milky_way',
-    tagline: 'The Pulsating Red Supergiant on the Brink',
-    color: '#FF7675',
-    overview: 'Betelgeuse is a red supergiant in Orion. If positioned at the center of our solar system, its pulsating photosphere would engulf Mercury, Venus, Earth, Mars, and the orbit of Jupiter.',
+    tagline: 'The Pulsating Red Supergiant on the Brink of Supernova',
+    color: '#FF5722',
+    overview: 'A colossal red supergiant star marking the right shoulder of the Orion constellation. If placed at the center of our solar system, its pulsating surface would engulf Mercury, Venus, Earth, Mars, and Jupiter.',
     scientificData: {
-      diameterKm: '1.2 billion km (887 Solar radii)',
+      diameterKm: '1.2 billion km (~900 Solar Radii)',
       distanceFromEarthLy: '642.5 light-years',
-      avgTempC: '3,500 K',
-      spectralType: 'M1-M2 Ia-ab Red Supergiant',
+      avgTempC: '3,500 Kelvin',
+      spectralType: 'M1-2 Ia-ab Red Supergiant',
+      massSolarMasses: '16.5 to 19 M☉',
       constellation: 'Orion'
     },
     interestingFacts: [
-      'It is nearing the end of its life and is destined to explode as a Type II core-collapse supernova within the next 100,000 years.',
-      'When Betelgeuse explodes, it will shine as bright as the half-Moon and remain visible in broad daylight for months.'
+      'Betelgeuse has exhausted its core hydrogen and is fusing heavier elements; it will end its life in a Type II core-collapse supernova within 100,000 years.',
+      'When it explodes, it will shine as bright as the Full Moon in Earth’s night sky for over three months.'
     ]
   },
   {
-    id: 'polaris',
-    name: 'Polaris (Alpha Ursae Minoris)',
+    id: 'sirius',
+    name: 'Sirius A & B (The Dog Star)',
     category: 'star',
     hierarchyLevel: 'star',
     parentObjectId: 'milky_way',
-    tagline: 'The Northern Navigational Anchor',
-    color: '#FFF9C4',
-    overview: 'Polaris is the North Star, currently positioned less than 1 degree from the northern celestial pole. It is a multiple star system dominated by a yellow supergiant classical Cepheid variable.',
+    tagline: 'The Brightest Star in Earth’s Night Sky',
+    color: '#E0F7FA',
+    overview: 'Sirius appears twice as bright as any other star in Earth’s sky. It is actually a binary system consisting of Sirius A (a luminous A-type main-sequence star) and Sirius B (a dense, Earth-sized White Dwarf star).',
     scientificData: {
-      diameterKm: '52 million km (37.5 Solar radii)',
-      distanceFromEarthLy: '433 light-years',
-      avgTempC: '6,015 K',
-      spectralType: 'F7Ib Supergiant',
-      constellation: 'Ursa Minor'
+      diameterKm: '2.4 million km (1.71 Solar Radii)',
+      distanceFromEarthLy: '8.611 light-years',
+      avgTempC: '9,940 Kelvin',
+      spectralType: 'A1V (Sirius A) + DA2 (Sirius B)',
+      constellation: 'Canis Major'
     },
     interestingFacts: [
-      'Due to Earth’s axial precession (a 26,000-year cycle), Vega and Thuban will take turns becoming the North Star in future epochs.',
-      'Polaris is 2,500 times more luminous than our Sun.'
+      'Sirius B was the first White Dwarf star ever discovered, having packed the entire mass of the Sun into an Earth-sized sphere.',
+      'Sirius is gradually moving closer to the Solar System and will continue brightening for the next 60,000 years.'
+    ]
+  },
+  {
+    id: 'alpha_centauri_system',
+    name: 'Alpha Centauri Triple System',
+    category: 'star_system',
+    hierarchyLevel: 'star_system',
+    parentObjectId: 'milky_way',
+    tagline: 'The Closest Stellar System to the Sun',
+    color: '#F4D03F',
+    overview: 'A gravitationally bound triple star system consisting of Alpha Centauri A (G2V, like our Sun), Alpha Centauri B (K1V, orange dwarf), and Proxima Centauri (M5.5V red dwarf, our nearest neighbor at 4.24 ly).',
+    scientificData: {
+      distanceFromEarthLy: '4.367 light-years',
+      constellation: 'Centaurus'
+    },
+    interestingFacts: [
+      'Alpha Centauri A and B orbit each other with an orbital period of 79.9 years at an average distance comparable to Uranus from the Sun.'
+    ]
+  },
+  {
+    id: 'orion_constellation',
+    name: 'Orion (The Hunter)',
+    category: 'constellation',
+    hierarchyLevel: 'star',
+    parentObjectId: 'milky_way',
+    tagline: 'The Prominent Equatorial Constellation',
+    color: '#61E6F2',
+    overview: 'Orion is one of the most recognizable constellations in the celestial sphere, located on the celestial equator. It contains two of the ten brightest stars in the sky: Rigel (Beta Orionis) and Betelgeuse (Alpha Orionis).',
+    scientificData: {
+      constellation: 'Orion'
+    },
+    interestingFacts: [
+      'The Belt of Orion consists of three prominent bright supergiant stars: Alnitak, Alnilam, and Mintaka.'
     ]
   }
 ];
 
 // ============================================================
-// 6. NEBULAE & STELLAR NURSERIES
+// 7. NEBULAE & STELLAR NURSERIES
 // ============================================================
 export const NEBULAE_DATA: CelestialObject[] = [
   {
     id: 'orion_nebula',
-    name: 'Orion Nebula (M42)',
+    name: 'The Great Orion Nebula (M42)',
     category: 'nebula',
     hierarchyLevel: 'nebula',
     parentObjectId: 'milky_way',
-    tagline: 'The Great Stellar Cradle',
+    tagline: 'The Nearest Massive Stellar Nursery',
     color: '#E056FD',
-    overview: 'The Orion Nebula is a vibrant emission nebula visible to the naked eye below Orion’s Belt. Within its glowing ionized hydrogen clouds, thousands of young stars and protoplanetary discs (proplyds) are actively condensing.',
+    overview: 'M42 is a vast diffuse emission and reflection nebula visible to the unaided eye in Orion’s sword. Within its glowing gaseous tendrils, hundreds of young proto-stars and protoplanetary discs are currently condensing from interstellar gas.',
     scientificData: {
       diameterKm: '24 light-years across',
       distanceFromEarthLy: '1,344 light-years',
       constellation: 'Orion'
     },
     interestingFacts: [
-      'The central Trapezium Cluster contains massive O-type stars whose intense ultraviolet radiation ionizes the surrounding hydrogen, making it glow in vivid pink and turquoise.',
-      'JWST has discovered rogue Jupiter-mass binary objects (JuMBOs) drifting through the nebula unbound to any star.'
+      'The Trapezium cluster of massive young O- and B-type stars at its heart produces intense ultraviolet radiation that ionizes the entire nebula.',
+      'Hubble Space Telescope discovered over 150 protoplanetary discs (proplyds) inside M42—solar systems in embryonic gestation.'
     ]
   },
   {
-    id: 'eagle_nebula',
-    name: 'Eagle Nebula & Pillars of Creation (M16)',
+    id: 'pillars_of_creation',
+    name: 'Pillars of Creation (Eagle Nebula / M16)',
     category: 'nebula',
     hierarchyLevel: 'nebula',
     parentObjectId: 'milky_way',
-    tagline: 'The Monumental Cathedrals of Starbirth',
+    tagline: 'Towers of Cosmic Gas & Starbirth',
     color: '#00CEC9',
-    overview: 'Located in Serpens, the Eagle Nebula contains the iconic "Pillars of Creation"—towering columns of cold interstellar hydrogen gas and dust being sculpted by the ultraviolet radiation of newborn massive stars.',
+    overview: 'Immense elephant trunks of interstellar hydrogen gas and microscopic dust in the Eagle Nebula, photographed in breathtaking detail by Hubble and JWST. The tallest pillar stands approximately 4 to 5 light-years tall.',
     scientificData: {
-      diameterKm: '70 x 55 light-years',
-      distanceFromEarthLy: '5,700 light-years',
+      diameterKm: '4 to 5 light-years tall',
+      distanceFromEarthLy: '6,500 light-years',
       constellation: 'Serpens'
     },
     interestingFacts: [
-      'The tallest pillar is approximately 4 light-years high from base to tip—roughly the distance from our Sun to Proxima Centauri.',
-      'Dense evaporative gaseous globules (EGGs) at the tips of the pillars shield infant protostars as they coalesce.'
+      'Ultraviolet photoevaporation from nearby hot young stars is gradually carving away the pillars, which will dissipate in ~3 million years.'
     ]
   },
   {
@@ -709,158 +790,149 @@ export const NEBULAE_DATA: CelestialObject[] = [
     category: 'nebula',
     hierarchyLevel: 'nebula',
     parentObjectId: 'milky_way',
-    tagline: 'The Titan of the Southern Skies',
+    tagline: 'The Titan Stellar Incubator of the South',
     color: '#FF7675',
-    overview: 'The Carina Nebula is one of the largest and most luminous diffuse nebulae in our galaxy, spanning 460 light-years. It shelters Eta Carinae, a hypergiant star nearing its final hypernova eruption.',
+    overview: 'One of the largest and brightest diffuse nebulae in the night sky, four times larger than Orion. It contains several open star clusters and the hypermassive, unstable binary star Eta Carinae.',
     scientificData: {
       diameterKm: '460 light-years across',
       distanceFromEarthLy: '8,500 light-years',
       constellation: 'Carina'
     },
     interestingFacts: [
-      'It is four times larger and far more luminous than the Orion Nebula, but only visible from the Southern Hemisphere.',
-      'The "Cosmic Cliffs" imaged by JWST reveal previously invisible young protostellar jets punching through thick dust.'
+      'Eta Carinae is a luminous blue variable star with 100 to 150 solar masses that emitted the Great Eruption in 1843, creating the Homunculus Nebula.'
     ]
   },
   {
     id: 'crab_nebula',
-    name: 'Crab Nebula (M1)',
-    category: 'nebula',
+    name: 'Crab Nebula (M1 / NGC 1952)',
+    category: 'supernova',
     hierarchyLevel: 'nebula',
     parentObjectId: 'milky_way',
-    tagline: 'The Expanding Supernova Remnant of 1054 AD',
-    color: '#6C5CE7',
-    overview: 'The Crab Nebula is the debris cloud from a core-collapse supernova observed and recorded by Chinese, Japanese, and Arab astronomers in 1054 AD. At its core spins the Crab Pulsar at 30 rotations per second.',
+    tagline: 'The Relic Shrapnel of a Recorded Supernova',
+    color: '#FAB1A0',
+    overview: 'The expanding supernova remnant and pulsar wind nebula left behind when a massive star exploded in 1054 CE. Chinese, Japanese, and Arab astronomers documented the "guest star," which remained visible in broad daylight for 23 days.',
     scientificData: {
       diameterKm: '11 light-years across',
       distanceFromEarthLy: '6,500 light-years',
+      revolutionPeriodDays: 'Spinning at 30.2 times per second (Crab Pulsar)',
       constellation: 'Taurus'
     },
     interestingFacts: [
-      'The Crab Pulsar emits synchronized pulses across all electromagnetic wavelengths from radio to energetic gamma rays.',
-      'The supernova was so bright in 1054 that it was visible in daylight for 23 days.'
+      'At its center spins the Crab Pulsar (a 28-km neutron star) blasting beams of synchroton radiation and gamma rays across the cosmos.'
     ]
   }
 ];
 
 // ============================================================
-// 7. GALAXIES & GALAXY CLUSTERS
+// 8. GALAXIES, GROUPS, CLUSTERS & SUPERCLUSTERS
 // ============================================================
 export const GALAXIES_DATA: CelestialObject[] = [
   {
     id: 'milky_way',
-    name: 'Milky Way Galaxy',
+    name: 'The Milky Way Galaxy',
     category: 'galaxy',
     hierarchyLevel: 'galaxy',
     parentObjectId: 'local_group',
-    tagline: 'Our Home Island Universe',
-    color: '#5B8CFF',
-    overview: 'The Milky Way is a barred spiral galaxy containing 100 to 400 billion stars. Our Solar System is situated in the Orion-Cygnus spur, roughly 26,000 light-years from the central supermassive black hole Sagittarius A*.',
+    tagline: 'Our Home Island Universe of 200 Billion Stars',
+    color: '#8766FF',
+    overview: 'A barred spiral galaxy (SBbc) spanning over 100,000 light-years. Our Solar System resides in the Orion-Cygnus Arm, orbiting the galactic core every 230 million years at 828,000 km/h.',
     scientificData: {
-      diameterKm: '100,000 light-years',
-      distanceFromEarthLy: '0 ly (Our Location)',
-      galaxyType: 'Barred Spiral (SBbc)',
-      constellation: 'Sagittarius (Core)'
+      diameterKm: '100,000 light-years across',
+      distanceFromEarthLy: '0 ly (Inside)',
+      massSolarMasses: '1.5 trillion M☉ (including dark matter halo)',
+      constellation: 'Sagittarius (Galactic Center)'
     },
     interestingFacts: [
-      'The entire galaxy rotates: our Solar System takes ~230 million years to complete one orbit (a Galactic Year).',
-      'In roughly 4.5 billion years, the Milky Way and Andromeda galaxies will merge into a giant elliptical galaxy dubbed "Milkomeda".'
+      'The Milky Way contains between 100 and 400 billion stars and at least 100 billion planets.',
+      'In roughly 4.5 billion years, the Milky Way and Andromeda galaxies will collide and merge into a giant elliptical galaxy (Milkomeda).'
     ]
   },
   {
-    id: 'andromeda',
+    id: 'andromeda_galaxy',
     name: 'Andromeda Galaxy (M31)',
     category: 'galaxy',
     hierarchyLevel: 'galaxy',
     parentObjectId: 'local_group',
-    tagline: 'The Galactic Monarch of the Local Group',
-    color: '#8766FF',
-    overview: 'Andromeda is the largest galaxy in our Local Group, spanning over 220,000 light-years and containing an estimated 1 trillion stars.',
+    tagline: 'The Great Spiral Sister of the Local Group',
+    color: '#61E6F2',
+    overview: 'The largest galaxy in our Local Group, spanning 220,000 light-years and containing approximately 1 trillion stars. It is the most distant object visible to the naked human eye under dark skies.',
     scientificData: {
-      diameterKm: '220,000 light-years',
+      diameterKm: '220,000 light-years across',
       distanceFromEarthLy: '2.537 million light-years',
-      galaxyType: 'Spiral Galaxy (SA(s)b)',
+      galaxyType: 'Barred Spiral (SA(s)b)',
       constellation: 'Andromeda'
     },
     interestingFacts: [
-      'It is the most distant celestial object visible to the naked human eye under dark night skies.',
-      'Andromeda is currently hurtling toward our Milky Way at 110 kilometers per second (400,000 km/h).'
-    ]
-  },
-  {
-    id: 'whirlpool_galaxy',
-    name: 'Whirlpool Galaxy (M51)',
-    category: 'galaxy',
-    hierarchyLevel: 'galaxy',
-    parentObjectId: 'local_group',
-    tagline: 'The Grand-Design Cosmic Spiral',
-    color: '#61E6F2',
-    overview: 'M51 is the quintessential grand-design spiral galaxy. Its dramatic spiral arms and dust lanes are sculpted by tidal gravitational interactions with its companion dwarf galaxy NGC 5195.',
-    scientificData: {
-      diameterKm: '60,000 light-years',
-      distanceFromEarthLy: '23 million light-years',
-      galaxyType: 'Grand Design Spiral (SA(s)bc pec)',
-      constellation: 'Canes Venatici'
-    },
-    interestingFacts: [
-      'First galaxy in history whose spiral structure was recognized, observed by Lord Rosse in 1845 using the Leviathan of Parsonstown.',
-      'Gravitational compression from NGC 5195 triggers massive starburst activity along its spiral arms.'
-    ]
-  },
-  {
-    id: 'sombrero_galaxy',
-    name: 'Sombrero Galaxy (M104)',
-    category: 'galaxy',
-    hierarchyLevel: 'galaxy',
-    parentObjectId: 'virgo_cluster',
-    tagline: 'The Majestic Dust-Lined Disc',
-    color: '#F5C56A',
-    overview: 'The Sombrero Galaxy features an extraordinarily bright white bulbous nucleus framed by an immense, dark absorbing dust lane, giving it the unmistakable shape of a Mexican sombrero hat.',
-    scientificData: {
-      diameterKm: '50,000 light-years',
-      distanceFromEarthLy: '31.1 million light-years',
-      galaxyType: 'Spiral / Lenticular (SA(s)a)',
-      constellation: 'Virgo'
-    },
-    interestingFacts: [
-      'Houses one of the most massive supermassive black holes in nearby galaxies, estimated at 1 billion solar masses.',
-      'It contains an unusually rich system of over 2,000 globular clusters.'
+      'Andromeda is hurtling toward our Milky Way at 110 kilometers per second (400,000 km/h).'
     ]
   },
   {
     id: 'local_group',
     name: 'The Local Group',
+    category: 'galaxy_group',
+    hierarchyLevel: 'galaxy_group',
+    parentObjectId: 'virgo_cluster',
+    tagline: 'Our Local Neighborhood of Galaxies',
+    color: '#3984FF',
+    overview: 'The gravitationally bound cluster of galaxies that includes the Milky Way, Andromeda, Triangulum, and over 80 dwarf galaxies across 10 million light-years.',
+    scientificData: {
+      diameterKm: '10 million light-years across',
+      distanceFromEarthLy: '0 ly (Inside)'
+    },
+    interestingFacts: [
+      'The barycenter of the Local Group lies somewhere between the Milky Way and Andromeda.'
+    ]
+  },
+  {
+    id: 'virgo_cluster',
+    name: 'Virgo Galaxy Cluster',
     category: 'galaxy_cluster',
     hierarchyLevel: 'galaxy_cluster',
     parentObjectId: 'laniakea_supercluster',
-    tagline: 'Our Local Neighborhood of Galaxies',
-    color: '#3984FF',
-    overview: 'The Local Group is the gravitationally bound cluster of galaxies that includes the Milky Way, Andromeda, Triangulum, and over 80 satellite dwarf galaxies across 10 million light-years.',
+    tagline: 'The Gravitational Anchor of our Galactic Neighborhood',
+    color: '#9B59B6',
+    overview: 'A massive cluster of approximately 1,500 to 2,000 galaxies centered in the constellation Virgo. It forms the heart of the Virgo Supercluster, gravitationally attracting the Local Group.',
     scientificData: {
-      diameterKm: '10 million light-years across',
-      distanceFromEarthLy: '0 ly (Inside)',
-      constellation: 'Local Supercluster'
+      diameterKm: '15 million light-years across',
+      distanceFromEarthLy: '53.8 million light-years'
     },
     interestingFacts: [
-      'The barycenter of the Local Group lies somewhere between the Milky Way and Andromeda.',
-      'The Large and Small Magellanic Clouds are irregular satellite galaxies orbiting the Milky Way.'
+      'Houses the giant elliptical galaxy M87 at its gravitational core.'
+    ]
+  },
+  {
+    id: 'laniakea_supercluster',
+    name: 'Laniakea Supercluster',
+    category: 'supercluster',
+    hierarchyLevel: 'supercluster',
+    parentObjectId: 'observable_universe',
+    tagline: 'The Immense Heaven of 100,000 Galaxies',
+    color: '#8E44AD',
+    overview: 'Laniakea (Hawaiian for "immense heaven") is the galaxy supercluster that contains the Milky Way and 100,000 other nearby galaxies, all flowing along gravitational watersheds toward the Great Attractor.',
+    scientificData: {
+      diameterKm: '520 million light-years across',
+      distanceFromEarthLy: '0 ly (Inside)',
+      massSolarMasses: '10^17 M☉'
+    },
+    interestingFacts: [
+      'Laniakea was discovered in 2014 by mapping the peculiar radial velocities of thousands of galaxies.'
     ]
   }
 ];
 
 // ============================================================
-// 8. EXTREME COSMIC PHENOMENA: BLACK HOLES, PULSARS & RELATIVITY
+// 9. EXTREME COSMIC PHENOMENA & COSMOLOGY
 // ============================================================
 export const EXTREME_PHENOMENA: CelestialObject[] = [
   {
     id: 'sagittarius_a',
     name: 'Sagittarius A* (Sgr A*)',
-    category: 'phenomenon',
+    category: 'black_hole',
     hierarchyLevel: 'extreme_phenomenon',
     parentObjectId: 'milky_way',
     tagline: 'The Gravitational Engine of the Milky Way',
     color: '#FD79A8',
-    overview: 'Sagittarius A* is the supermassive black hole anchoring the galactic center of the Milky Way. With a mass 4.3 million times that of our Sun, its immense gravity governs the orbits of nearby S-stars.',
+    overview: 'Sagittarius A* is the supermassive black hole anchoring the galactic center of the Milky Way. With a mass 4.3 million times that of our Sun, its immense gravity governs the relativistic orbits of nearby S-stars.',
     scientificData: {
       diameterKm: '44 million km (Schwarzschild radius ~12M km)',
       distanceFromEarthLy: '26,673 light-years',
@@ -868,19 +940,18 @@ export const EXTREME_PHENOMENA: CelestialObject[] = [
       constellation: 'Sagittarius'
     },
     interestingFacts: [
-      'In May 2022, the Event Horizon Telescope (EHT) unveiled the historic first radio silhouette of Sagittarius A*’s glowing accretion ring.',
-      'Nearby star S2 orbits Sgr A* at 7,700 km/s (nearly 3% of light speed), proving relativistic Schwarzschild precession.'
+      'In May 2022, the Event Horizon Telescope (EHT) unveiled the historic first radio silhouette of Sagittarius A*’s glowing accretion ring.'
     ]
   },
   {
     id: 'm87_black_hole',
     name: 'M87* Supermassive Black Hole',
-    category: 'phenomenon',
+    category: 'black_hole',
     hierarchyLevel: 'extreme_phenomenon',
     parentObjectId: 'virgo_cluster',
-    tagline: 'The First Imaged Black Hole in Human History',
+    tagline: 'The First Directly Imaged Black Hole in History',
     color: '#FF6B6B',
-    overview: 'Located at the center of the giant elliptical galaxy Messier 87, this monster black hole holds a staggering 6.5 billion times the mass of the Sun. In 2019, it became the first black hole directly imaged by humanity.',
+    overview: 'Located at the center of giant elliptical galaxy Messier 87, this monster black hole holds a staggering 6.5 billion times the mass of the Sun. In 2019, it became the first black hole directly imaged by humanity.',
     scientificData: {
       diameterKm: '38 billion km (Event horizon)',
       distanceFromEarthLy: '53.5 million light-years',
@@ -888,54 +959,194 @@ export const EXTREME_PHENOMENA: CelestialObject[] = [
       constellation: 'Virgo'
     },
     interestingFacts: [
-      'Its event horizon shadow is larger than the entire Solar System out past the orbit of Pluto.',
-      'It launches a relativistic jet of plasma extending over 5,000 light-years across space.'
+      'Its event horizon shadow is larger than the entire Solar System out past the orbit of Pluto.'
     ]
   },
   {
     id: 'magnetar_sgr1806',
     name: 'Magnetar SGR 1806-20',
-    category: 'phenomenon',
+    category: 'magnetar',
     hierarchyLevel: 'extreme_phenomenon',
     parentObjectId: 'milky_way',
     tagline: 'The Most Powerful Magnetic Entity in the Cosmos',
     color: '#61E6F2',
-    overview: 'A magnetar is an extreme neutron star with a magnetic field up to 100 billion Tesla—a quadrillion times stronger than Earth’s. A starquake on SGR 1806-20 in 2004 released more energy in a tenth of a second than the Sun emits in 150,000 years.',
+    overview: 'A magnetar is an extreme neutron star with a magnetic field up to 100 billion Tesla—a quadrillion times stronger than Earth’s. A starquake on SGR 1806-20 in 2004 released more energy in 0.1s than the Sun emits in 150,000 years.',
     scientificData: {
       diameterKm: '20 km across',
       distanceFromEarthLy: '50,000 light-years',
       constellation: 'Sagittarius'
     },
     interestingFacts: [
-      'At a distance of 1,000 kilometers from a magnetar, its magnetic field would dissolve your body’s atomic electron clouds into needle-like cylinders.',
-      'The 2004 giant gamma-ray flare physically ionized Earth’s upper atmosphere from 50,000 light-years away.'
+      'At 1,000 km from a magnetar, its magnetic field would dissolve your body’s atomic electron clouds into needle-like cylinders.'
+    ]
+  },
+  {
+    id: 'vela_pulsar',
+    name: 'Vela Pulsar (PSR J0835-4510)',
+    category: 'pulsar',
+    hierarchyLevel: 'extreme_phenomenon',
+    tagline: 'The Ultra-Dense Cosmic Radio Lighthouse',
+    color: '#00E676',
+    overview: 'A rapidly spinning neutron star formed in a supernova explosion 11,000 years ago. It rotates 11.195 times every second, sweeping focused beams of radio, X-ray, and gamma-ray radiation across Earth like a cosmic lighthouse.',
+    scientificData: {
+      diameterKm: '20 km across',
+      distanceFromEarthLy: '936 light-years',
+      constellation: 'Vela'
+    },
+    interestingFacts: [
+      'A single teaspoon of neutron star material would weigh approximately 5 billion metric tons on Earth.'
+    ]
+  },
+  {
+    id: 'quasar_3c273',
+    name: 'Quasar 3C 273',
+    category: 'quasar',
+    hierarchyLevel: 'extreme_phenomenon',
+    tagline: 'The First Identified Active Galactic Nucleus',
+    color: '#FFD700',
+    overview: 'The first quasar ever identified (in 1963 by Maarten Schmidt). Powered by a supermassive black hole consuming hundreds of solar masses of gas annually, it shines 4 trillion times brighter than our entire Sun.',
+    scientificData: {
+      distanceFromEarthLy: '2.44 billion light-years',
+      redshiftZ: '0.158',
+      constellation: 'Virgo'
+    },
+    interestingFacts: [
+      'If 3C 273 were placed at the distance of Pollux (33 light-years from Earth), it would shine as brightly in the sky as the Sun.'
+    ]
+  },
+  {
+    id: 'grb_221009a',
+    name: 'GRB 221009A ("The BOAT")',
+    category: 'gamma_ray_burst',
+    hierarchyLevel: 'extreme_phenomenon',
+    tagline: 'The Brightest of All Time Cosmic Detonation',
+    color: '#FF1744',
+    overview: 'Detected on October 9, 2022, this cataclysmic core-collapse supernova and newborn black hole launched the most energetic gamma-ray burst ever recorded, releasing photons exceeding 18 Tera-electronvolts.',
+    scientificData: {
+      distanceFromEarthLy: '2.4 billion light-years',
+      constellation: 'Sagitta'
+    },
+    interestingFacts: [
+      'Astronomers estimate an explosion of this magnitude occurs in our observable universe only once every 10,000 years.'
+    ]
+  },
+  {
+    id: 'gw150914',
+    name: 'GW150914 Gravitational Wave Event',
+    category: 'gravitational_wave',
+    hierarchyLevel: 'extreme_phenomenon',
+    tagline: 'The Historic First Detection of Spacetime Ripples',
+    color: '#7C4DFF',
+    overview: 'On September 14, 2015, the LIGO detectors observed ripples in spacetime caused by the inspiral and merger of two stellar-mass black holes (36 and 29 solar masses) 1.3 billion light-years away.',
+    scientificData: {
+      distanceFromEarthLy: '1.3 billion light-years',
+      discoveryYear: 2015
+    },
+    interestingFacts: [
+      'During the final fraction of a second of the merger, the event radiated more energy as gravitational waves than all the stars in the observable universe combined.'
     ]
   },
   {
     id: 'cosmic_microwave_background',
     name: 'Cosmic Microwave Background (CMB)',
-    category: 'phenomenon',
+    category: 'cosmic_microwave_background',
     hierarchyLevel: 'universe',
-    tagline: 'The Echo of the Big Bang (380,000 Years After Creation)',
+    tagline: 'The Relic Thermal Afterglow of the Big Bang',
     color: '#E17055',
-    overview: 'The CMB is the cooled relic thermal radiation left over from the Big Bang. When the universe was 380,000 years old, neutral hydrogen atoms formed (Recombination), allowing photons to stream freely across the cosmos for the first time.',
+    overview: 'The CMB is the cooled relic thermal radiation left over from the Big Bang. When the universe was 380,000 years old, neutral hydrogen atoms formed, allowing photons to stream freely across the cosmos for the first time.',
     scientificData: {
       avgTempC: '2.725 Kelvin (-270.425°C)',
       distanceFromEarthLy: '46.5 billion light-years (Observable Horizon)',
-      discoveryYear: 1965,
-      discoveryMethod: 'Holmdel Horn Antenna (Penzias & Wilson)'
+      discoveryYear: 1965
     },
     interestingFacts: [
-      'Fluctuations in the CMB (one part in 100,000) mapped by the Planck satellite represent the gravitational seeds that grew into all galaxies and superclusters today.',
-      'Roughly 1% of the static "snow" on old analog television antennas is caused by Big Bang photons striking the receiver.'
+      'Fluctuations in the CMB mapped by the Planck satellite represent the primordial quantum fluctuations that seeded all cosmic structure.'
+    ]
+  },
+  {
+    id: 'cosmic_web',
+    name: 'The Cosmic Web',
+    category: 'cosmic_web',
+    hierarchyLevel: 'universe',
+    tagline: 'The Grand Filamentary Scaffolding of Spacetime',
+    color: '#5352ED',
+    overview: 'The largest coherent structure in the universe: an interconnected network of dark matter filaments and galaxy superclusters spanning billions of light-years, surrounding immense empty cosmic voids.',
+    scientificData: {
+      diameterKm: 'Tens of billions of light-years'
+    },
+    interestingFacts: [
+      'The cosmic web looks remarkably similar to neural networks in biological brains, demonstrating mathematical scale invariance in complex networks.'
+    ]
+  },
+  {
+    id: 'dark_matter_halo',
+    name: 'Dark Matter Halos',
+    category: 'dark_matter',
+    hierarchyLevel: 'universe',
+    tagline: 'The Invisible 27% Gravitational Glue of Galaxies',
+    color: '#2F3542',
+    overview: 'Non-baryonic, non-luminous matter that does not interact with electromagnetic radiation. Discovered through galaxy rotation curves (Vera Rubin) and gravitational lensing, it provides the gravitational scaffolding that prevents galaxies from flying apart.',
+    scientificData: {
+      massSolarMasses: '~85% of total cosmic matter'
+    },
+    interestingFacts: [
+      'Without dark matter, the early universe could not have formed stars and galaxies within the 13.8-billion-year cosmic age.'
+    ]
+  },
+  {
+    id: 'dark_energy_field',
+    name: 'Dark Energy & Cosmological Constant',
+    category: 'dark_energy',
+    hierarchyLevel: 'universe',
+    tagline: 'The Repulsive Pressure Accelerating Universal Expansion',
+    color: '#70A1FF',
+    overview: 'A mysterious negative-pressure energy permeating all space, comprising 68% of the universe’s total energy density. Discovered in 1998 via Type Ia supernovae, it causes the expansion of spacetime to accelerate continuously.',
+    scientificData: {
+      massSolarMasses: '68% of total universe energy density'
+    },
+    interestingFacts: [
+      'The 2011 Nobel Prize in Physics was awarded for the discovery that cosmic expansion is accelerating due to Dark Energy.'
+    ]
+  },
+  {
+    id: 'observable_universe_horizon',
+    name: 'The Observable Universe',
+    category: 'observable_universe',
+    hierarchyLevel: 'universe',
+    tagline: 'The 93-Billion Light-Year Horizon of Human Knowledge',
+    color: '#747D8C',
+    overview: 'The spherical region of the universe comprising all matter and spacetime that can be observed from Earth at the present time, bounded by the cosmological event horizon 46.5 billion light-years in any direction.',
+    scientificData: {
+      diameterKm: '93 billion light-years (8.8 x 10^26 meters)',
+      discoveryYear: '13.8 billion years old'
+    },
+    interestingFacts: [
+      'Because space itself has been expanding since the Big Bang, objects whose light took 13.8 billion years to reach us are now 46.5 billion light-years away.'
+    ]
+  },
+  {
+    id: 'big_bang_singularity',
+    name: 'The Big Bang & Cosmic Inflation',
+    category: 'big_bang',
+    hierarchyLevel: 'universe',
+    tagline: 'The Birth of Spacetime and All Matter (13.8 Billion Years Ago)',
+    color: '#FF6B81',
+    overview: 'The prevailing cosmological model explaining how the universe expanded from an extremely hot, dense singularity 13.787 billion years ago, rapidly inflated, and cooled to forge the fundamental elements of existence.',
+    scientificData: {
+      discoveryYear: '13.787 ± 0.020 billion years ago'
+    },
+    interestingFacts: [
+      'During Cosmic Inflation (10^-36 to 10^-32 seconds), the universe expanded faster than the speed of light, smoothing out spatial curvature.'
     ]
   }
 ];
 
 // Master unified catalogue
 export const ALL_CELESTIAL_OBJECTS: CelestialObject[] = [
+  ROOT_SOLAR_SYSTEM,
   ...PLANETS_DATA,
   ...DWARF_PLANETS,
+  ...ASTEROIDS_AND_COMETS,
   ...MOONS_DATA,
   ...EXOPLANETS_DATA,
   ...STARS_DATA,

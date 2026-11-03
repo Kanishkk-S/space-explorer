@@ -6,6 +6,7 @@ export type CelestialHierarchy =
   | 'universe'
   | 'supercluster'
   | 'galaxy_cluster'
+  | 'galaxy_group'
   | 'galaxy'
   | 'nebula'
   | 'star_system'
@@ -18,14 +19,35 @@ export type CelestialHierarchy =
   | 'extreme_phenomenon';
 
 export type CelestialCategory = 
+  | 'solar_system'
   | 'planet' 
   | 'dwarf_planet'
   | 'moon' 
-  | 'star' 
+  | 'asteroid'
+  | 'comet'
   | 'exoplanet'
-  | 'galaxy' 
-  | 'galaxy_cluster'
+  | 'star_system'
+  | 'star' 
+  | 'constellation'
   | 'nebula' 
+  | 'galaxy' 
+  | 'galaxy_group'
+  | 'galaxy_cluster'
+  | 'supercluster'
+  | 'black_hole'
+  | 'neutron_star'
+  | 'pulsar'
+  | 'magnetar'
+  | 'quasar'
+  | 'supernova'
+  | 'gamma_ray_burst'
+  | 'gravitational_wave'
+  | 'cosmic_microwave_background'
+  | 'cosmic_web'
+  | 'dark_matter'
+  | 'dark_energy'
+  | 'observable_universe'
+  | 'big_bang'
   | 'phenomenon';
 
 export interface CelestialObject {
@@ -59,6 +81,9 @@ export interface CelestialObject {
     massSolarMasses?: number | string;
     discoveryYear?: number | string;
     discoveryMethod?: string;
+    redshiftZ?: number | string;
+    energyOutputWatts?: string;
+    magneticFieldTesla?: string;
   };
   structure?: string;
   atmosphere?: string;
