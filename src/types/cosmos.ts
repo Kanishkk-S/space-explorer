@@ -1,12 +1,30 @@
 // ============================================================
-// SPACE EXPLORER — COSMOS 3D EXPERIENCE: CORE TYPE DEFINITIONS
+// SPACE EXPLORER — UNIVERSE EXTENDED TYPE DEFINITIONS
 // ============================================================
+
+export type CelestialHierarchy = 
+  | 'universe'
+  | 'supercluster'
+  | 'galaxy_cluster'
+  | 'galaxy'
+  | 'nebula'
+  | 'star_system'
+  | 'star'
+  | 'exoplanet'
+  | 'planet'
+  | 'dwarf_planet'
+  | 'moon'
+  | 'asteroid_comet'
+  | 'extreme_phenomenon';
 
 export type CelestialCategory = 
   | 'planet' 
+  | 'dwarf_planet'
   | 'moon' 
   | 'star' 
+  | 'exoplanet'
   | 'galaxy' 
+  | 'galaxy_cluster'
   | 'nebula' 
   | 'phenomenon';
 
@@ -14,10 +32,14 @@ export interface CelestialObject {
   id: string;
   name: string;
   category: CelestialCategory;
+  hierarchyLevel?: CelestialHierarchy;
+  parentObjectId?: string;
   tagline: string;
   overview: string;
   image?: string;
   color: string;
+  isConfirmed?: boolean;
+  isArtisticRepresentation?: boolean;
   // Scientific parameters
   scientificData?: {
     diameterKm?: number | string;
@@ -30,16 +52,20 @@ export interface CelestialObject {
     atmosphereComposition?: string[];
     knownMoonsCount?: number;
     parentPlanet?: string;
+    hostStar?: string;
     spectralType?: string;
     galaxyType?: string;
     constellation?: string;
+    massSolarMasses?: number | string;
+    discoveryYear?: number | string;
+    discoveryMethod?: string;
   };
   structure?: string;
   atmosphere?: string;
+  surfaceFeatures?: string;
   explorationHistory?: string[];
   interestingFacts: string[];
   moons?: string[];
-  isArtisticRepresentation?: boolean;
 }
 
 export interface QuizOption {

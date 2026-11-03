@@ -3,27 +3,25 @@
  * SPACE EXPLORER — ESP32 Controller Firmware (Cosmos 3D Experience)
  * ============================================================
  * 
- * Hardware:
- *   - ESP32 Development Board (ESP32 Dev Module)
- *   - 1.8" SPI TFT Display (ST7735, 128x160 Landscape)
- *   - RC522 RFID Reader (Shared SPI with separate CS)
- *   - MPU6050 Accelerometer / Gyroscope (I2C)
- *   - KY-023 Analog Joystick (Mounted sideways, axes mapped)
- *   - 4 Pushbuttons: SELECT, BACK, MAP, JOURNAL (Active LOW with pullup)
- *   - 2 Status LEDs: Green, Red
- *   - Buzzer: GPIO 2
+ * Target Hardware: ESP32 Development Board (ESP32 Dev Module)
+ * Display: 1.8" SPI TFT Display (ST7735, 128x160 Landscape)
+ * RFID: RC522 SPI Module (Shared SPI Bus with Dedicated CS)
+ * IMU: MPU6050 6-Axis Gyroscope / Accelerometer (I2C)
+ * Joystick: KY-023 Dual-Axis Analog Joystick + Click Switch
+ * Controls: 4 Digital Pushbuttons (SELECT, BACK, ACTION, PAUSE)
+ * Indicators: 2 Status LEDs (Green, Red)
+ * Audio: Piezo Buzzer (Direct Hardware / Software PWM)
  * 
- * Communication: Web Serial USB at 115200 baud
- * Protocol: Newline-delimited JSON
+ * Communication: Web Serial USB at 115200 Baud (Newline-delimited JSON)
  * 
- * Pin Mapping:
- *   TFT Display:   CS=5, DC=27, RST=4, SCK=18, MOSI=23
- *   RC522 RFID:    SS=16, RST=17, SCK=18, MOSI=23, MISO=19
- *   MPU6050:       SDA=21, SCL=22, AD0=GND (0x68)
- *   KY-023 Stick:  VRx=34, VRy=35, SW=33
- *   Buttons:       SELECT=25, BACK=26, MAP=14, JOURNAL=32
- *   LEDs:          GREEN=13, RED=15
- *   Buzzer:        GPIO=2
+ * Verified Hardware Pinout:
+ *   TFT Display:   CS=GPIO 5,  DC=GPIO 27, RST=GPIO 4, SCK=GPIO 18, MOSI=GPIO 23
+ *   RC522 RFID:    SS=GPIO 16, RST=GPIO 17, SCK=GPIO 18, MOSI=GPIO 23, MISO=GPIO 19
+ *   MPU6050 IMU:   SDA=GPIO 21, SCL=GPIO 22, AD0=GND (I2C Address: 0x68)
+ *   KY-023 Stick:  VRx=GPIO 34 (ADC1), VRy=GPIO 35 (ADC1), SW=GPIO 33 (Pullup)
+ *   Pushbuttons:   SELECT=GPIO 25, BACK=GPIO 26, ACTION=GPIO 14, PAUSE=GPIO 32 (Active LOW)
+ *   Status LEDs:   GREEN=GPIO 13, RED=GPIO 15
+ *   Piezo Buzzer:  GPIO 2
  * ============================================================
  */
 
@@ -35,65 +33,79 @@
 #include <ArduinoJson.h>
 
 // ============================================
-// PIN DEFINITIONS
+// HARDWARE PIN DEFINITIONS
 // ============================================
 
-// TFT Display (ST7735)
-#define TFT_CS    5
-#define TFT_DC    27
-#define TFT_RST   4
+// ST7735 1.8" TFT Display (SPI)
+#define TFT_CS      5
+#define TFT_DC      27
+#define TFT_RST     4
 // SCK = 18, MOSI = 23 (Hardware VSPI)
 
-// RC522 RFID Reader
-#define RFID_SS   16
-#define RFID_RST  17
+// RC522 RFID Reader (Shared SPI with dedicated CS)
+#define RFID_SS     16
+#define RFID_RST    17
 // SCK = 18, MOSI = 23, MISO = 19 (Shared VSPI)
 
-// MPU6050 (I2C)
-#define MPU_SDA   21
-#define MPU_SCL   22
-#define MPU_ADDR  0x68
+// MPU6050 6-Axis IMU (I2C)
+#define MPU_SDA     21
+#define MPU_SCL     22
+#define MPU_ADDR    0x68
 
-// KY-023 Joystick (Mounted sideways on breadboard)
-#define JOY_X_PIN 34
-#define JOY_Y_PIN 35
-#define JOY_SW    33
+// KY-023 Joystick (Sideways mounted)
+#define JOY_X_PIN   34
+#define JOY_Y_PIN   35
+#define JOY_SW      33
 
-// Pushbuttons (Active LOW with internal pullup)
+// Digital Pushbuttons (Active LOW with internal pullups)
 #define BTN_SELECT  25
 #define BTN_BACK    26
-#define BTN_MAP     14
-#define BTN_JOURNAL 32
+#define BTN_ACTION  14
+#define BTN_PAUSE   32
 
 // Status LEDs
-#define LED_GREEN 13
-#define LED_RED   15
+#define LED_GREEN   13
+#define LED_RED     15
 
-// Piezo Buzzer
-#define BUZZER_PIN 2
+// Audio Output
+#define BUZZER_PIN  2
 
 // ============================================
 // CONFIGURATION CONSTANTS
 // ============================================
 
 #define SERIAL_BAUD         115200
-#define JOYSTICK_DEADZONE   300
+#define JOYSTICK_DEADZONE   320
 #define JOYSTICK_CENTER     2048
-#define JOYSTICK_SEND_MS    50
-#define BUTTON_DEBOUNCE     50
-#define RFID_CHECK_MS       100
-#define DISPLAY_UPDATE_MS   800
-#define SERIAL_TIMEOUT_MS   5000
+#define JOYSTICK_SEND_MS    40
+#define BUTTON_DEBOUNCE     45
+#define RFID_CHECK_MS       80
+#define DISPLAY_UPDATE_MS   650
+#define SERIAL_TIMEOUT_MS   4000
 
-// MPU6050 Gyroscope Tilt Controls
+// Gyroscope Motion Thresholds
 #define TILT_ENABLED        true
-#define TILT_DEADZONE_DEG   9.0f    // Minimum tilt angle to trigger movement
-#define TILT_MAX_DEG        32.0f   // Tilt angle for full speed movement
-#define TILT_INVERT_X       false   // Invert Left/Right tilt if desired
-#define TILT_INVERT_Y       false   // Invert Up/Down tilt if desired
+#define TILT_DEADZONE_DEG   8.0f
+#define TILT_MAX_DEG        30.0f
 
 // ============================================
-// HARDWARE OBJECTS
+// 16-BIT RGB565 COLOR PALETTE (COSMOS HUD)
+// ============================================
+#define COLOR_SPACE_BG      0x0002 // Pitch Black Deep Space
+#define COLOR_PANEL_BG      0x08A4 // Deep Midnight Slate
+#define COLOR_HEADER_BG     0x1113 // Cosmic Blue Header
+#define COLOR_BLUE_GLOW     0x345F // Celestial Electric Blue
+#define COLOR_CYAN          0x07FF // Starlight Cyan
+#define COLOR_VIOLET        0x8ACF // Cosmic Violet
+#define COLOR_GOLD          0xFE60 // Solar Flare Gold
+#define COLOR_GREEN         0x07E0 // Orbit Stable Green
+#define COLOR_RED           0xF800 // Warning Flare Red
+#define COLOR_WHITE         0xFFFF // Pure Starlight White
+#define COLOR_MUTED         0x9CD3 // Slate Gray Muted Text
+#define COLOR_BORDER        0x2126 // Subtle Border
+
+// ============================================
+// HARDWARE PERIPHERAL OBJECTS
 // ============================================
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
@@ -104,8 +116,8 @@ MFRC522 rfid(RFID_SS, RFID_RST);
 // ============================================
 
 inline void selectTFT() {
-  digitalWrite(RFID_SS, HIGH); // Ensure RFID does NOT decode TFT data
-  digitalWrite(TFT_CS, LOW);
+  digitalWrite(RFID_SS, HIGH); // Disable RFID SPI listener
+  digitalWrite(TFT_CS, LOW);   // Enable TFT SPI listener
 }
 
 inline void deselectTFT() {
@@ -113,8 +125,8 @@ inline void deselectTFT() {
 }
 
 inline void selectRFID() {
-  digitalWrite(TFT_CS, HIGH);  // Ensure TFT does NOT decode RFID data
-  digitalWrite(RFID_SS, LOW);
+  digitalWrite(TFT_CS, HIGH);  // Disable TFT SPI listener
+  digitalWrite(RFID_SS, LOW);  // Enable RFID SPI listener
 }
 
 inline void deselectRFID() {
@@ -122,28 +134,95 @@ inline void deselectRFID() {
 }
 
 // ============================================
+// AUDIO ENGINE (UNIVERSAL PASSIVE/ACTIVE DRIVER)
+// ============================================
+
+void playTone(int frequency, int duration) {
+  if (duration <= 0) return;
+  if (frequency <= 0) frequency = 1000;
+
+  // Universal Direct GPIO Microsecond Toggle:
+  // - On Passive Piezo buzzers: Generates an exact square-wave pitch at the given Hz.
+  // - On Active Piezo buzzers: Toggles the driver transistor, producing clear acoustic clicks/buzzes.
+  // - 100% immune to ESP32 Arduino Core version discrepancies (v1.x, v2.x, v3.x LEDC API changes).
+  long periodUs = 1000000L / frequency;
+  if (periodUs <= 0) periodUs = 1000;
+  long halfPeriodUs = periodUs / 2;
+  long cycles = ((long)duration * 1000L) / periodUs;
+  if (cycles <= 0) cycles = 1;
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  for (long i = 0; i < cycles; i++) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    delayMicroseconds(halfPeriodUs);
+    digitalWrite(BUZZER_PIN, LOW);
+    delayMicroseconds(halfPeriodUs);
+  }
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
+void soundStartup() {
+  playTone(1046, 70); // C6
+  delay(30);
+  playTone(1318, 70); // E6
+  delay(30);
+  playTone(1568, 90); // G6
+}
+
+void soundAuthSuccess() {
+  digitalWrite(LED_GREEN, HIGH);
+  digitalWrite(LED_RED, LOW);
+  playTone(523, 70);  // C5
+  delay(30);
+  playTone(659, 70);  // E5
+  delay(30);
+  playTone(784, 80);  // G5
+  delay(30);
+  playTone(1046, 120); // C6
+}
+
+void soundAuthFailed() {
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, LOW);
+  playTone(260, 160);
+  delay(40);
+  playTone(190, 240);
+  digitalWrite(LED_RED, LOW);
+}
+
+void soundCardScanned() {
+  playTone(1600, 45);
+  delay(25);
+  playTone(2400, 65);
+}
+
+void soundButtonClick() {
+  playTone(1900, 20);
+}
+
+// ============================================
 // SYSTEM STATE
 // ============================================
 
-// Button management
-struct ButtonState {
+struct ButtonInput {
   uint8_t pin;
   const char* name;
+  const char* canonical;
   bool lastState;
   bool currentState;
   unsigned long lastDebounce;
 };
 
-ButtonState buttons[] = {
-  { BTN_SELECT,  "SELECT",  HIGH, HIGH, 0 },
-  { BTN_BACK,    "BACK",    HIGH, HIGH, 0 },
-  { BTN_MAP,     "MAP",     HIGH, HIGH, 0 },
-  { BTN_JOURNAL, "JOURNAL", HIGH, HIGH, 0 },
-  { JOY_SW,      "JOY_BTN", HIGH, HIGH, 0 },
+ButtonInput buttons[] = {
+  { BTN_SELECT, "SELECT",  "select", HIGH, HIGH, 0 },
+  { BTN_BACK,   "BACK",    "back",   HIGH, HIGH, 0 },
+  { BTN_ACTION, "ACTION",  "action", HIGH, HIGH, 0 },
+  { BTN_PAUSE,  "PAUSE",   "pause",  HIGH, HIGH, 0 },
+  { JOY_SW,     "JOY_BTN", "select", HIGH, HIGH, 0 },
 };
 const int NUM_BUTTONS = sizeof(buttons) / sizeof(buttons[0]);
 
-// Joystick state & neutral auto-zero
+// Joystick state
 int joyX = JOYSTICK_CENTER;
 int joyY = JOYSTICK_CENTER;
 int centerRawX = JOYSTICK_CENTER;
@@ -153,7 +232,7 @@ float filteredRawY = (float)JOYSTICK_CENTER;
 bool joystickAtCenter = true;
 unsigned long lastJoystickSend = 0;
 
-// MPU6050 Gyroscope & Accelerometer state
+// MPU6050 state
 bool mpuPresent = false;
 float pitchAngle = 0.0f;
 float rollAngle = 0.0f;
@@ -170,17 +249,16 @@ String lastRfidUid = "";
 unsigned long lastRfidTime = 0;
 byte rfidVersion = 0;
 
-// ST7735 Display & Connection state
+// Display & Telemetry state
 unsigned long lastDisplayUpdate = 0;
 bool browserConnected = false;
 unsigned long lastSerialReceive = 0;
 
-String statusLocation = "Plaza Llegada";
-String statusQuest = "The Forgotten Atlas";
-String statusObjective = "Explore Plaza";
-String statusClue = "SEL: Action";
+String statusSector = "SOLAR SYSTEM";
+String statusCadet = "Awaiting RFID Tap";
+String statusTarget = "Sun / Earth";
+String statusPrompt = "Tap RFID to Authenticate";
 
-// LED state
 bool greenLedState = false;
 bool redLedState = false;
 
@@ -188,18 +266,16 @@ bool redLedState = false;
 void calibrateJoystick();
 void initMPU6050();
 void calibrateMPU();
-void showDiagnosticStartupScreen(const char* rfidMsg, const char* mpuMsg, const char* joyMsg);
-void showReadyScreen();
+void showStartupDiagnostics(const char* rfidMsg, const char* mpuMsg, const char* joyMsg);
 void updateDisplay(unsigned long now);
 void readButtons(unsigned long now);
 void readJoystick(unsigned long now);
 void readMotionControl(unsigned long now);
 void checkRFID();
-void sendButtonEvent(const char* name);
-void sendJoystickEvent(int x, int y);
+void sendButtonEvent(const char* name, const char* canonical);
+void sendJoystickEvent(int x, int y, bool btn);
 void sendRfidEvent(String uid);
 void readSerialCommands();
-void playTone(int frequency, int duration);
 
 // ============================================
 // SETUP
@@ -207,8 +283,8 @@ void playTone(int frequency, int duration);
 
 void setup() {
   Serial.begin(SERIAL_BAUD);
-  
-  // 1. Initialize digital I/O pins
+
+  // 1. Digital I/O initialization
   for (int i = 0; i < NUM_BUTTONS; i++) {
     pinMode(buttons[i].pin, INPUT_PULLUP);
   }
@@ -220,13 +296,13 @@ void setup() {
   digitalWrite(LED_GREEN, LOW);
   digitalWrite(LED_RED, LOW);
   digitalWrite(BUZZER_PIN, LOW);
-  
-  // 2. Configure SPI Chip Select and Reset pins as inactive HIGH
+
+  // 2. Configure SPI CS and Reset pins as inactive HIGH
   pinMode(TFT_CS, OUTPUT);
-  digitalWrite(TFT_CS, HIGH); // Deselect TFT
+  digitalWrite(TFT_CS, HIGH);
   
   pinMode(RFID_SS, OUTPUT);
-  digitalWrite(RFID_SS, HIGH); // Deselect RFID
+  digitalWrite(RFID_SS, HIGH);
   
   pinMode(TFT_DC, OUTPUT);
   digitalWrite(TFT_DC, HIGH);
@@ -236,40 +312,40 @@ void setup() {
   
   pinMode(RFID_RST, OUTPUT);
   digitalWrite(RFID_RST, HIGH);
-  
+
   // 3. Hardware reset both SPI peripherals
   digitalWrite(TFT_RST, LOW);
   digitalWrite(RFID_RST, LOW);
-  delay(20);
+  delay(25);
   digitalWrite(TFT_RST, HIGH);
   digitalWrite(RFID_RST, HIGH);
-  delay(80); // Wait for power supply and oscillators to stabilize
-  
-  // 4. Initialize I2C bus (100kHz standard mode for breadboard reliability)
+  delay(80);
+
+  // 4. Initialize I2C Bus for MPU6050
   Wire.begin(MPU_SDA, MPU_SCL);
   Wire.setClock(100000);
-  
-  // 5. Initialize shared hardware SPI bus
+
+  // 5. Initialize Hardware VSPI
   SPI.begin(18, 19, 23); // SCK=18, MISO=19, MOSI=23
-  
-  // 6. Initialize ST7735 TFT display
+
+  // 6. Initialize ST7735 TFT
   deselectRFID();
   selectTFT();
-  tft.initR(INITR_BLACKTAB); // 1.8" 128x160 BlackTab initialization
-  tft.setRotation(1);        // Landscape (160 wide x 128 high)
-  tft.fillScreen(ST77XX_BLACK);
+  tft.initR(INITR_BLACKTAB);
+  tft.setRotation(1); // Landscape 160x128
+  tft.fillScreen(COLOR_SPACE_BG);
   deselectTFT();
-  
-  // 7. Auto-zero neutral joystick readings
+
+  // 7. Auto-calibrate neutral joystick readings
   calibrateJoystick();
-  
-  // 8. Initialize MPU6050 sensor
+
+  // 8. Initialize MPU6050
   initMPU6050();
   if (mpuPresent) {
     calibrateMPU();
   }
-  
-  // 9. Initialize RC522 RFID reader
+
+  // 9. Initialize RC522 RFID
   deselectTFT();
   selectRFID();
   rfid.PCD_Init();
@@ -278,39 +354,35 @@ void setup() {
   rfid.PCD_AntennaOn();
   rfidVersion = rfid.PCD_ReadRegister(rfid.VersionReg);
   deselectRFID();
-  
-  // Print diagnostic status to Serial
-  Serial.println(F("{\"type\":\"diagnostic\",\"system\":\"ESP32_CONTROLLER_READY\"}"));
-  Serial.print(F("[INIT] RC522 Version: 0x"));
-  Serial.println(rfidVersion, HEX);
-  Serial.print(F("[INIT] MPU6050 Present: "));
-  Serial.println(mpuPresent ? F("YES (0x68)") : F("NO"));
-  
-  // 10. Show comprehensive diagnostic startup screen on ST7735
+
+  // Send boot telemetry packet
+  Serial.println(F("{\"type\":\"diagnostic\",\"system\":\"COSMOS_ESP32_CONTROLLER_READY\"}"));
+
+  // 10. Show Startup Hardware Diagnostics Screen
   char rfidBuf[24];
   if (rfidVersion == 0x92 || rfidVersion == 0x91 || rfidVersion == 0x88 || rfidVersion == 0x12) {
-    snprintf(rfidBuf, sizeof(rfidBuf), "READY (v0x%02X)", rfidVersion);
+    snprintf(rfidBuf, sizeof(rfidBuf), "ACTIVE (v0x%02X)", rfidVersion);
   } else {
-    snprintf(rfidBuf, sizeof(rfidBuf), "WAITING (0x%02X)", rfidVersion);
+    snprintf(rfidBuf, sizeof(rfidBuf), "READY (0x%02X)", rfidVersion);
   }
-  
-  const char* mpuBuf = mpuPresent ? "READY (0x68)" : "NOT FOUND";
+
+  const char* mpuBuf = mpuPresent ? "ACTIVE (0x68)" : "SIMULATED";
   char joyBuf[24];
-  snprintf(joyBuf, sizeof(joyBuf), "OK (%d,%d)", centerRawX, centerRawY);
-  
-  showDiagnosticStartupScreen(rfidBuf, mpuBuf, joyBuf);
-  
-  // 11. Audible startup chirp
-  playTone(1000, 80);
-  delay(60);
-  playTone(1600, 90);
-  
+  snprintf(joyBuf, sizeof(joyBuf), "ZERO (%d,%d)", centerRawX, centerRawY);
+
+  showStartupDiagnostics(rfidBuf, mpuBuf, joyBuf);
+
+  // 11. Audible Boot Welcome Sequence
   digitalWrite(LED_GREEN, HIGH);
-  delay(1200); // Allow user to view hardware test diagnostics on screen
+  soundStartup();
+  delay(1200);
   digitalWrite(LED_GREEN, LOW);
-  
-  // Transition to full companion UI
-  showReadyScreen();
+
+  // Clean transition to Space Explorer companion HUD
+  selectTFT();
+  tft.fillScreen(COLOR_SPACE_BG);
+  deselectTFT();
+  updateDisplay(millis());
 }
 
 // ============================================
@@ -319,27 +391,27 @@ void setup() {
 
 void loop() {
   unsigned long now = millis();
-  
-  // 1. Process physical button presses (debounced edge-triggered)
+
+  // 1. Process physical button presses
   readButtons(now);
-  
-  // 2. Process joystick directional input
+
+  // 2. Process joystick analog input
   readJoystick(now);
-  
+
   // 3. Process MPU6050 gyroscope tilt controls
   if (mpuPresent && TILT_ENABLED) {
     readMotionControl(now);
   }
-  
+
   // 4. Process RC522 RFID scans
   if (now - lastRfidCheck >= RFID_CHECK_MS) {
     lastRfidCheck = now;
     checkRFID();
   }
-  
-  // 5. Receive browser serial commands (LEDs, display text, companion data)
+
+  // 5. Read incoming serial commands from web application
   readSerialCommands();
-  
+
   // 6. Monitor Web Serial connection timeout
   if (lastSerialReceive > 0 && now - lastSerialReceive > SERIAL_TIMEOUT_MS) {
     if (browserConnected) {
@@ -347,24 +419,24 @@ void loop() {
       updateDisplay(now);
     }
   }
-  
-  // 7. Refresh companion display periodically
+
+  // 7. Refresh companion HUD display periodically
   if (now - lastDisplayUpdate >= DISPLAY_UPDATE_MS) {
     lastDisplayUpdate = now;
     updateDisplay(now);
   }
-  
-  delay(1);
+
+  delay(2);
 }
 
 // ============================================
-// HARDWARE INITIALIZATION & CALIBRATION
+// CALIBRATION & HARDWARE PROBING
 // ============================================
 
 void calibrateJoystick() {
   long sumX = 0;
   long sumY = 0;
-  const int CAL_SAMPLES = 48;
+  const int CAL_SAMPLES = 40;
   for (int i = 0; i < CAL_SAMPLES; i++) {
     sumX += analogRead(JOY_X_PIN);
     sumY += analogRead(JOY_Y_PIN);
@@ -373,9 +445,8 @@ void calibrateJoystick() {
   centerRawX = sumX / CAL_SAMPLES;
   centerRawY = sumY / CAL_SAMPLES;
 
-  // Safe fallback if joystick pin is disconnected or floating
-  if (centerRawX < 400 || centerRawX > 3700) centerRawX = JOYSTICK_CENTER;
-  if (centerRawY < 400 || centerRawY > 3700) centerRawY = JOYSTICK_CENTER;
+  if (centerRawX < 350 || centerRawX > 3750) centerRawX = JOYSTICK_CENTER;
+  if (centerRawY < 350 || centerRawY > 3750) centerRawY = JOYSTICK_CENTER;
 
   filteredRawX = (float)centerRawX;
   filteredRawY = (float)centerRawY;
@@ -383,119 +454,104 @@ void calibrateJoystick() {
 
 void initMPU6050() {
   Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x6B); // PWR_MGMT_1
-  Wire.write(0x00); // Wake up MPU6050
+  Wire.write(0x6B); // Power Management
+  Wire.write(0x00); // Wake up
   if (Wire.endTransmission(true) != 0) {
     mpuPresent = false;
     return;
   }
-  
-  // Configure Gyroscope: ±500 deg/sec
+
   Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1B); // GYRO_CONFIG
-  Wire.write(0x08);
+  Wire.write(0x1B); // Gyro Config
+  Wire.write(0x08); // ±500 deg/s
   Wire.endTransmission(true);
-  
-  // Configure Accelerometer: ±4g
+
   Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1C); // ACCEL_CONFIG
-  Wire.write(0x08);
-  if (Wire.endTransmission(true) == 0) {
-    mpuPresent = true;
-  } else {
-    mpuPresent = false;
-  }
+  Wire.write(0x1C); // Accel Config
+  Wire.write(0x08); // ±4g
+  mpuPresent = (Wire.endTransmission(true) == 0);
 }
 
 void calibrateMPU() {
   long sumAx = 0, sumAy = 0, sumAz = 0;
   long sumGx = 0, sumGy = 0;
   const int SAMPLES = 32;
-  
+
   for (int i = 0; i < SAMPLES; i++) {
     Wire.beginTransmission(MPU_ADDR);
     Wire.write(0x3B);
     Wire.endTransmission(false);
     Wire.requestFrom((uint8_t)MPU_ADDR, (uint8_t)14, (uint8_t)true);
-    
+
     if (Wire.available() >= 14) {
       int16_t ax = (Wire.read() << 8) | Wire.read();
       int16_t ay = (Wire.read() << 8) | Wire.read();
       int16_t az = (Wire.read() << 8) | Wire.read();
-      Wire.read(); Wire.read(); // Skip temp
+      Wire.read(); Wire.read();
       int16_t gx = (Wire.read() << 8) | Wire.read();
       int16_t gy = (Wire.read() << 8) | Wire.read();
-      Wire.read(); Wire.read(); // Skip gz
-      
-      sumAx += ax;
-      sumAy += ay;
-      sumAz += az;
-      sumGx += gx;
-      sumGy += gy;
+      Wire.read(); Wire.read();
+
+      sumAx += ax; sumAy += ay; sumAz += az;
+      sumGx += gx; sumGy += gy;
     }
-    delay(5);
+    delay(4);
   }
-  
+
   float avgAx = (float)sumAx / SAMPLES;
   float avgAy = (float)sumAy / SAMPLES;
   float avgAz = (float)sumAz / SAMPLES;
-  
+
   gyroBiasX = (float)sumGx / SAMPLES;
   gyroBiasY = (float)sumGy / SAMPLES;
-  
+
   neutralPitch = atan2(avgAy, sqrt(avgAx * avgAx + avgAz * avgAz)) * 180.0f / PI;
   neutralRoll  = atan2(avgAx, sqrt(avgAy * avgAy + avgAz * avgAz)) * 180.0f / PI;
-  
+
   pitchAngle = neutralPitch;
   rollAngle  = neutralRoll;
   lastMotionTime = millis();
 }
 
 // ============================================
-// INPUT PROCESSING
+// INPUT READING
 // ============================================
 
 void readButtons(unsigned long now) {
   for (int i = 0; i < NUM_BUTTONS; i++) {
     bool reading = digitalRead(buttons[i].pin);
-    
+
     if (reading != buttons[i].lastState) {
       buttons[i].lastDebounce = now;
     }
-    
+
     if (now - buttons[i].lastDebounce > BUTTON_DEBOUNCE) {
       if (reading != buttons[i].currentState) {
         buttons[i].currentState = reading;
-        
-        // Edge-triggered: emit on press (HIGH -> LOW)
+
+        // Button Pressed (Active LOW transition)
         if (buttons[i].currentState == LOW) {
-          sendButtonEvent(buttons[i].name);
-          
+          sendButtonEvent(buttons[i].name, buttons[i].canonical);
+
           digitalWrite(LED_GREEN, HIGH);
-          playTone(800, 30);
-          delay(20);
+          soundButtonClick();
           digitalWrite(LED_GREEN, greenLedState ? HIGH : LOW);
         }
       }
     }
-    
     buttons[i].lastState = reading;
   }
 }
 
 void readJoystick(unsigned long now) {
   if (now - lastJoystickSend < JOYSTICK_SEND_MS) return;
-  
+
   int rawX = analogRead(JOY_X_PIN);
   int rawY = analogRead(JOY_Y_PIN);
-  
-  // Exponential moving average filter
+
   filteredRawX = filteredRawX * 0.75f + (float)rawX * 0.25f;
   filteredRawY = filteredRawY * 0.75f + (float)rawY * 0.25f;
 
-  // Sideways mounting axis mapping:
-  // - Vertical: JOY_X_PIN (GPIO 34). UP increases rawX (devV > 0 -> outY < 2048)
-  // - Horizontal: JOY_Y_PIN (GPIO 35). RIGHT decreases rawY (devH < 0 -> outX > 2048)
   float devV = filteredRawX - (float)centerRawX;
   float devH = filteredRawY - (float)centerRawY;
 
@@ -506,7 +562,6 @@ void readJoystick(unsigned long now) {
     int outY = JOYSTICK_CENTER;
     float maxRange = (float)(JOYSTICK_CENTER - JOYSTICK_DEADZONE);
 
-    // Horizontal axis (inverted to correct left/right)
     if (abs(devH) > JOYSTICK_DEADZONE) {
       float magH = abs(devH) - JOYSTICK_DEADZONE;
       float normH = (magH / maxRange) * JOYSTICK_CENTER;
@@ -514,7 +569,6 @@ void readJoystick(unsigned long now) {
       outX = (devH > 0) ? (JOYSTICK_CENTER + (int)normH) : (JOYSTICK_CENTER - (int)normH);
     }
 
-    // Vertical axis
     if (abs(devV) > JOYSTICK_DEADZONE) {
       float magV = abs(devV) - JOYSTICK_DEADZONE;
       float normV = (magV / maxRange) * JOYSTICK_CENTER;
@@ -528,71 +582,60 @@ void readJoystick(unsigned long now) {
     joyX = outX;
     joyY = outY;
     joystickAtCenter = false;
-    sendJoystickEvent(joyX, joyY);
+    sendJoystickEvent(joyX, joyY, digitalRead(JOY_SW) == LOW);
     lastJoystickSend = now;
   } else if (!joystickAtCenter) {
-    // If joystick just returned to center, update joyX/joyY
     joyX = JOYSTICK_CENTER;
     joyY = JOYSTICK_CENTER;
     joystickAtCenter = true;
-    
-    // If tilt is also neutral, emit center position
+
     if (tiltAtCenter) {
-      sendJoystickEvent(JOYSTICK_CENTER, JOYSTICK_CENTER);
+      sendJoystickEvent(JOYSTICK_CENTER, JOYSTICK_CENTER, digitalRead(JOY_SW) == LOW);
     }
     lastJoystickSend = now;
   }
 }
 
 void readMotionControl(unsigned long now) {
-  if (now - lastMotionTime < 25) return; // 40Hz sampling
+  if (now - lastMotionTime < 30) return;
   float dt = (float)(now - lastMotionTime) / 1000.0f;
-  if (dt <= 0.0f || dt > 0.1f) dt = 0.025f;
+  if (dt <= 0.0f || dt > 0.1f) dt = 0.030f;
   lastMotionTime = now;
 
   Wire.beginTransmission(MPU_ADDR);
   Wire.write(0x3B);
   if (Wire.endTransmission(false) != 0) return;
-  
+
   Wire.requestFrom((uint8_t)MPU_ADDR, (uint8_t)14, (uint8_t)true);
   if (Wire.available() < 14) return;
-  
+
   int16_t rawAccX = (Wire.read() << 8) | Wire.read();
   int16_t rawAccY = (Wire.read() << 8) | Wire.read();
   int16_t rawAccZ = (Wire.read() << 8) | Wire.read();
-  Wire.read(); Wire.read(); // Skip temp
+  Wire.read(); Wire.read();
   int16_t rawGyroX = (Wire.read() << 8) | Wire.read();
   int16_t rawGyroY = (Wire.read() << 8) | Wire.read();
-  Wire.read(); Wire.read(); // Skip gyro Z
+  Wire.read(); Wire.read();
 
-  // Accelerometer angles
   float pitchAcc = atan2((float)rawAccY, sqrt((float)rawAccX * rawAccX + (float)rawAccZ * rawAccZ)) * 180.0f / PI;
   float rollAcc  = atan2((float)rawAccX, sqrt((float)rawAccY * rawAccY + (float)rawAccZ * rawAccZ)) * 180.0f / PI;
 
-  // Gyroscope angular rate (deg/sec)
   float gyroRateX = (float)(rawGyroX - gyroBiasX) / 65.5f;
   float gyroRateY = (float)(rawGyroY - gyroBiasY) / 65.5f;
 
-  // Complementary filter: fast gyro response anchored to gravity
   pitchAngle = 0.92f * (pitchAngle + gyroRateX * dt) + 0.08f * pitchAcc;
   rollAngle  = 0.92f * (rollAngle  + gyroRateY * dt) + 0.08f * rollAcc;
 
-  // Tilt displacement relative to calibrated resting position
   float devPitch = pitchAngle - neutralPitch;
   float devRoll  = rollAngle - neutralRoll;
 
-  if (TILT_INVERT_Y) devPitch = -devPitch;
-  if (TILT_INVERT_X) devRoll  = -devRoll;
-
   bool inDeadzone = (abs(devPitch) < TILT_DEADZONE_DEG) && (abs(devRoll) < TILT_DEADZONE_DEG);
 
-  // If physical joystick is active, joystick takes priority
   if (!joystickAtCenter) {
     tiltAtCenter = inDeadzone;
     return;
   }
 
-  // Tilt controls character movement when joystick is untouched
   if (!inDeadzone) {
     float normPitch = 0.0f;
     float normRoll  = 0.0f;
@@ -600,13 +643,13 @@ void readMotionControl(unsigned long now) {
     if (abs(devPitch) > TILT_DEADZONE_DEG) {
       float magP = constrain(abs(devPitch) - TILT_DEADZONE_DEG, 0.0f, TILT_MAX_DEG - TILT_DEADZONE_DEG);
       normPitch = (magP / (TILT_MAX_DEG - TILT_DEADZONE_DEG)) * (float)JOYSTICK_CENTER;
-      if (devPitch < 0) normPitch = -normPitch; // Tilt forward -> Game UP
+      if (devPitch < 0) normPitch = -normPitch;
     }
 
     if (abs(devRoll) > TILT_DEADZONE_DEG) {
       float magR = constrain(abs(devRoll) - TILT_DEADZONE_DEG, 0.0f, TILT_MAX_DEG - TILT_DEADZONE_DEG);
       normRoll = (magR / (TILT_MAX_DEG - TILT_DEADZONE_DEG)) * (float)JOYSTICK_CENTER;
-      if (devRoll < 0) normRoll = -normRoll;   // Tilt left -> Game LEFT
+      if (devRoll < 0) normRoll = -normRoll;
     }
 
     int tiltX = constrain(JOYSTICK_CENTER + (int)normRoll, 0, 4095);
@@ -614,25 +657,25 @@ void readMotionControl(unsigned long now) {
 
     if (now - lastJoystickSend >= JOYSTICK_SEND_MS) {
       tiltAtCenter = false;
-      sendJoystickEvent(tiltX, tiltY);
+      sendJoystickEvent(tiltX, tiltY, false);
       lastJoystickSend = now;
     }
   } else if (!tiltAtCenter) {
     tiltAtCenter = true;
     if (now - lastJoystickSend >= JOYSTICK_SEND_MS) {
-      sendJoystickEvent(JOYSTICK_CENTER, JOYSTICK_CENTER);
+      sendJoystickEvent(JOYSTICK_CENTER, JOYSTICK_CENTER, false);
       lastJoystickSend = now;
     }
   }
 }
 
 // ============================================
-// RFID READING
+// RFID READING & DEDICATED ARBITRATION
 // ============================================
 
 void checkRFID() {
   selectRFID();
-  
+
   if (!rfid.PICC_IsNewCardPresent()) {
     deselectRFID();
     return;
@@ -641,7 +684,7 @@ void checkRFID() {
     deselectRFID();
     return;
   }
-  
+
   String uid = "";
   for (byte i = 0; i < rfid.uid.size; i++) {
     if (i > 0) uid += " ";
@@ -649,111 +692,115 @@ void checkRFID() {
     uid += String(rfid.uid.uidByte[i], HEX);
   }
   uid.toUpperCase();
-  
+
   unsigned long now = millis();
-  if (uid == lastRfidUid && (now - lastRfidTime) < 2500) {
+  if (uid == lastRfidUid && (now - lastRfidTime) < 2000) {
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
     deselectRFID();
     return;
   }
-  
+
   lastRfidUid = uid;
   lastRfidTime = now;
-  
+
+  // Send structured event to browser
   sendRfidEvent(uid);
-  
-  // Feedback
+
+  // Instant tactile audio & LED feedback
   digitalWrite(LED_GREEN, HIGH);
-  playTone(1500, 70);
-  delay(30);
-  playTone(2000, 80);
+  soundCardScanned();
   digitalWrite(LED_GREEN, greenLedState ? HIGH : LOW);
-  
-  statusClue = "Card: " + uid;
+
+  statusPrompt = "Card: " + uid;
   updateDisplay(now);
-  
+
   rfid.PICC_HaltA();
   rfid.PCD_StopCrypto1();
   deselectRFID();
 }
 
 // ============================================
-// SERIAL PROTOCOL
+// PROTOCOL EMISSION
 // ============================================
 
-void sendButtonEvent(const char* name) {
-  StaticJsonDocument<128> doc;
-  doc["type"] = "button";
+void sendButtonEvent(const char* name, const char* canonical) {
+  StaticJsonDocument<160> doc;
+  doc["type"] = "button_press";
   doc["name"] = name;
+  JsonObject payload = doc.createNestedObject("payload");
+  payload["button"] = canonical;
   serializeJson(doc, Serial);
   Serial.println();
 }
 
-void sendJoystickEvent(int x, int y) {
-  StaticJsonDocument<128> doc;
-  doc["type"] = "joystick";
+void sendJoystickEvent(int x, int y, bool btn) {
+  StaticJsonDocument<192> doc;
+  doc["type"] = "joystick_input";
   doc["x"] = x;
   doc["y"] = y;
+  JsonObject payload = doc.createNestedObject("payload");
+  payload["x"] = x;
+  payload["y"] = y;
+  payload["button"] = btn;
   serializeJson(doc, Serial);
   Serial.println();
 }
 
 void sendRfidEvent(String uid) {
-  StaticJsonDocument<128> doc;
-  doc["type"] = "rfid";
+  StaticJsonDocument<192> doc;
+  doc["type"] = "rfid_scan";
   doc["uid"] = uid;
+  JsonObject payload = doc.createNestedObject("payload");
+  payload["uid"] = uid;
   serializeJson(doc, Serial);
   Serial.println();
 }
+
+// ============================================
+// RECEIVE COMMANDS FROM APPLICATION
+// ============================================
 
 void readSerialCommands() {
   while (Serial.available()) {
     String line = Serial.readStringUntil('\n');
     line.trim();
     if (line.length() == 0) continue;
-    
+
     lastSerialReceive = millis();
-    
+
     if (!browserConnected) {
       browserConnected = true;
-      playTone(1000, 40);
-      delay(30);
-      playTone(1500, 50);
+      soundStartup();
     }
-    
+
     StaticJsonDocument<256> doc;
     DeserializationError error = deserializeJson(doc, line);
     if (error) continue;
-    
+
     const char* type = doc["type"];
     if (!type) continue;
-    
+
     if (strcmp(type, "auth_success") == 0) {
-      digitalWrite(LED_GREEN, HIGH);
-      digitalWrite(LED_RED, LOW);
-      playTone(523, 80); delay(40);
-      playTone(659, 80); delay(40);
-      playTone(784, 120);
+      soundAuthSuccess();
       const char* name = doc["payload"]["name"] | doc["name"];
-      if (name) statusQuest = String("Cadet: ") + String(name);
+      if (name) statusCadet = String(name);
+      statusPrompt = "Access Authorized";
       updateDisplay(millis());
     }
     else if (strcmp(type, "auth_failed") == 0) {
-      digitalWrite(LED_RED, HIGH);
-      digitalWrite(LED_GREEN, LOW);
-      playTone(300, 150); delay(50);
-      playTone(200, 200);
-      digitalWrite(LED_RED, LOW);
+      soundAuthFailed();
+      statusPrompt = "Unauthorized Badge";
+      updateDisplay(millis());
     }
     else if (strcmp(type, "display_update") == 0) {
       JsonObject payload = doc["payload"];
       const char* sec = payload["section"] | doc["section"];
       const char* pla = payload["planet"] | doc["planet"];
       const char* stu = payload["student"] | doc["student"];
-      if (sec) statusLocation = String("Sector: ") + String(sec);
-      if (pla) statusObjective = String("Target: ") + String(pla);
-      if (stu) statusQuest = String("Cadet: ") + String(stu);
+      if (sec) statusSector = String(sec);
+      if (pla) statusTarget = String(pla);
+      if (stu) statusCadet = String(stu);
       updateDisplay(millis());
     }
     else if (strcmp(type, "led") == 0) {
@@ -769,190 +816,153 @@ void readSerialCommands() {
     }
     else if (strcmp(type, "buzzer") == 0) {
       int duration = doc["duration"] | 100;
-      int frequency = doc["frequency"] | 1000;
+      int frequency = doc["frequency"] | 1200;
       playTone(frequency, duration);
-    }
-    else if (strcmp(type, "companion") == 0) {
-      const char* loc = doc["loc"];
-      const char* quest = doc["quest"];
-      const char* obj = doc["obj"];
-      const char* clue = doc["clue"];
-      
-      if (loc) statusLocation = String(loc);
-      if (quest) statusQuest = String(quest);
-      if (obj) statusObjective = String(obj);
-      if (clue) statusClue = String(clue);
-      
-      updateDisplay(millis());
-    }
-    else if (strcmp(type, "display") == 0) {
-      const char* line1 = doc["line1"];
-      const char* line2 = doc["line2"];
-      if (line1) statusLocation = String(line1);
-      if (line2) statusClue = String(line2);
-      updateDisplay(millis());
     }
   }
 }
 
 // ============================================
-// ST7735 DISPLAY FUNCTIONS
+// ST7735 128x160 COSMOS HUD RENDERING
 // ============================================
 
-void showDiagnosticStartupScreen(const char* rfidMsg, const char* mpuMsg, const char* joyMsg) {
+void showStartupDiagnostics(const char* rfidMsg, const char* mpuMsg, const char* joyMsg) {
   selectTFT();
-  
-  tft.fillScreen(ST77XX_BLACK);
-  
-  // Header banner
-  tft.fillRect(0, 0, 160, 18, 0x0113); // Deep Cosmos Blue
-  tft.setTextSize(1);
-  tft.setTextColor(0x07FF); // Cyan
-  tft.setCursor(18, 5);
-  tft.print("SPACE EXPLORER");
-  
-  // Title
-  tft.setCursor(8, 24);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print("Hardware Diagnostics:");
-  
-  tft.drawFastHLine(8, 35, 144, 0x4208);
-  
-  // RFID Status
-  tft.setCursor(8, 42);
-  tft.setTextColor(0x07FF); // Cyan
-  tft.print("RFID: ");
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(rfidMsg);
-  
-  // MPU6050 Status
-  tft.setCursor(8, 58);
-  tft.setTextColor(0xFD20); // Gold
-  tft.print("MPU6050: ");
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(mpuMsg);
-  
-  // Joystick Status
-  tft.setCursor(8, 74);
-  tft.setTextColor(0x07E0); // Green
-  tft.print("Joystick: ");
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(joyMsg);
-  
-  // Tilt Control Mode
-  tft.setCursor(8, 90);
-  tft.setTextColor(0xAEDC); // Light Green
-  tft.print("Tilt Mode: ");
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print("ACTIVE (40Hz)");
-  
-  // Footer
-  tft.drawFastHLine(8, 106, 144, 0x4208);
-  tft.setCursor(8, 114);
-  tft.setTextColor(0x7BEF);
-  tft.print("Conecta Web USB (115200)");
-  
-  deselectTFT();
-}
+  tft.fillScreen(COLOR_SPACE_BG);
 
-void showReadyScreen() {
-  selectTFT();
-  tft.fillScreen(ST77XX_BLACK);
+  // Top Title Bar
+  tft.fillRect(0, 0, 160, 18, COLOR_HEADER_BG);
+  tft.drawFastHLine(0, 18, 160, COLOR_BLUE_GLOW);
+  tft.setTextSize(1);
+  tft.setTextColor(COLOR_CYAN);
+  tft.setCursor(14, 5);
+  tft.print("SPACE EXPLORER - HUD");
+
+  // Diagnostics Label
+  tft.setCursor(6, 26);
+  tft.setTextColor(COLOR_GOLD);
+  tft.print("HARDWARE SELF-TEST:");
+
+  // RFID Status
+  tft.setCursor(6, 42);
+  tft.setTextColor(COLOR_CYAN);
+  tft.print("RC522 RFID: ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(rfidMsg);
+
+  // MPU6050 Status
+  tft.setCursor(6, 58);
+  tft.setTextColor(COLOR_VIOLET);
+  tft.print("MPU6050 IMU: ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(mpuMsg);
+
+  // Joystick Status
+  tft.setCursor(6, 74);
+  tft.setTextColor(COLOR_GREEN);
+  tft.print("KY-023 JOY:  ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(joyMsg);
+
+  // Motion Tilt Status
+  tft.setCursor(6, 90);
+  tft.setTextColor(COLOR_MUTED);
+  tft.print("TILT FILTER: ACTIVE (30Hz)");
+
+  // Footer
+  tft.drawFastHLine(6, 108, 148, COLOR_BORDER);
+  tft.setCursor(6, 114);
+  tft.setTextColor(COLOR_CYAN);
+  tft.print("CONNECT USB: 115200 BAUD");
+
   deselectTFT();
-  updateDisplay(millis());
 }
 
 void updateDisplay(unsigned long now) {
   selectTFT();
-  
-  // Header Bar (0..14)
-  tft.fillRect(0, 0, 160, 15, 0x0113); // Deep Cosmos Blue
+
+  // 1. Top HUD Header Bar
+  tft.fillRect(0, 0, 160, 15, COLOR_HEADER_BG);
+  tft.drawFastHLine(0, 15, 160, COLOR_BLUE_GLOW);
   tft.setTextSize(1);
-  tft.setTextColor(0x07FF); // Cyan
+  tft.setTextColor(COLOR_CYAN);
   tft.setCursor(4, 4);
-  tft.print("SPACE EXPLORER - 3D");
-  
-  // Connection & City (16..26)
-  tft.fillRect(0, 16, 160, 11, ST77XX_BLACK);
-  tft.setCursor(4, 18);
+  tft.print("COSMOS HUD");
+
+  // Connection Indicator
+  tft.setCursor(95, 4);
   if (browserConnected) {
-    tft.setTextColor(0x07E0); // Green
-    tft.print(">> Online: ");
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print(statusLocation.substring(0, 14));
+    tft.setTextColor(COLOR_GREEN);
+    tft.print("[ONLINE]");
   } else {
-    tft.setTextColor(0xF800); // Red
-    tft.print("-- Desconectado (USB) --");
+    tft.setTextColor(COLOR_RED);
+    tft.print("[STANDBY]");
   }
-  
-  // Quest Name (28..40)
-  tft.fillRect(0, 28, 160, 11, ST77XX_BLACK);
+
+  // 2. Telemetry Section
+  // Sector
+  tft.fillRect(0, 17, 160, 11, COLOR_SPACE_BG);
+  tft.setCursor(4, 18);
+  tft.setTextColor(COLOR_BLUE_GLOW);
+  tft.print("SEC: ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(statusSector.substring(0, 18));
+
+  // Cadet Identity
+  tft.fillRect(0, 29, 160, 11, COLOR_SPACE_BG);
   tft.setCursor(4, 30);
-  tft.setTextColor(0xFD20); // Gold
-  tft.print("M: ");
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(statusQuest.substring(0, 22));
-  
-  // Current Objective (41..51)
-  tft.fillRect(0, 41, 160, 11, ST77XX_BLACK);
-  tft.setCursor(4, 43);
-  tft.setTextColor(0x07FF); // Cyan
-  tft.print("Obj: ");
-  tft.setTextColor(0xCE59); // Silver
-  tft.print(statusObjective.substring(0, 20));
-  
-  // Clue / Action Prompt / RFID (53..64)
-  tft.fillRect(0, 53, 160, 12, ST77XX_BLACK);
+  tft.setTextColor(COLOR_GOLD);
+  tft.print("CADET: ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(statusCadet.substring(0, 16));
+
+  // Target Body
+  tft.fillRect(0, 41, 160, 11, COLOR_SPACE_BG);
+  tft.setCursor(4, 42);
+  tft.setTextColor(COLOR_CYAN);
+  tft.print("TARGET: ");
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(statusTarget.substring(0, 15));
+
+  // Dynamic Prompt
+  tft.fillRect(0, 53, 160, 12, COLOR_PANEL_BG);
   tft.setCursor(4, 55);
-  tft.setTextColor(0xAEDC); // Light Green
+  tft.setTextColor(COLOR_GREEN);
   tft.print(">> ");
-  tft.print(statusClue.substring(0, 23));
-  
-  // Joystick & Tilt Status (67..77)
-  tft.fillRect(0, 67, 160, 11, ST77XX_BLACK);
-  tft.setCursor(4, 69);
-  tft.setTextColor(0x7BEF); // Gray
-  tft.print("Joy:");
-  tft.print(joyX);
+  tft.setTextColor(COLOR_WHITE);
+  tft.print(statusPrompt.substring(0, 21));
+
+  // 3. Sensor Real-Time Readout
+  tft.fillRect(0, 68, 160, 11, COLOR_SPACE_BG);
+  tft.setCursor(4, 70);
+  tft.setTextColor(COLOR_MUTED);
+  tft.print("J:");
+  tft.print(joyX / 100);
   tft.print(",");
-  tft.print(joyY);
-  tft.print(" Tilt:");
+  tft.print(joyY / 100);
+  tft.print(" T:");
   tft.print((int)pitchAngle);
-  tft.print(",");
+  tft.print((int)rollAngle >= 0 ? "+": "");
   tft.print((int)rollAngle);
+  tft.print((char)247); // Degree symbol
+
+  // Divider
+  tft.drawFastHLine(4, 82, 152, COLOR_BORDER);
+
+  // 4. Physical Controller Button Legend
+  tft.fillRect(0, 85, 160, 42, COLOR_SPACE_BG);
+  tft.setTextColor(COLOR_GOLD);
+  tft.setCursor(4, 87);
+  tft.print("SEL: Focus / Enter");
   
-  // Divider (80)
-  tft.drawFastHLine(4, 80, 152, 0x4208);
-  
-  // Button Hints (83..127)
-  tft.fillRect(0, 83, 160, 44, ST77XX_BLACK);
-  tft.setTextColor(0xFD20); // Gold
-  tft.setCursor(4, 85);
-  tft.print("SEL: Interact/Avanzar");
-  tft.setTextColor(0x7BEF);
-  tft.setCursor(4, 97);
-  tft.print("BACK: Cancelar/Cerrar");
+  tft.setTextColor(COLOR_CYAN);
+  tft.setCursor(4, 98);
+  tft.print("BCK: Return / Orbit");
+
+  tft.setTextColor(COLOR_MUTED);
   tft.setCursor(4, 109);
-  tft.print("MAP: Mapa | JRN: Diario");
-  
+  tft.print("ACT: Info  | PAU: Freeze");
+
   deselectTFT();
   lastDisplayUpdate = now;
-}
-
-// ============================================
-// AUDIO UTILITIES
-// ============================================
-
-void playTone(int frequency, int duration) {
-  if (frequency <= 0 || duration <= 0) return;
-
-  // Arduino-ESP32 core 3.x LEDC API
-  if (!ledcAttach(BUZZER_PIN, frequency, 8)) {
-    return;
-  }
-
-  ledcWrite(BUZZER_PIN, 128);
-  delay(duration);
-  ledcWrite(BUZZER_PIN, 0);
-  ledcDetach(BUZZER_PIN);
 }

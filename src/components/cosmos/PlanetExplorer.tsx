@@ -1,5 +1,6 @@
 // ============================================================
-// SPACE EXPLORER — PLANET EXPLORER & MOONS
+// SPACE EXPLORER — REALISTIC 3D PLANET EXPLORER & GLOBE
+// Photorealistic Earth, clouds, atmosphere, continents & moons
 // ============================================================
 
 import React, { useState, useRef, useMemo } from 'react';
@@ -8,20 +9,12 @@ import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 import { PLANETS_DATA, MOONS_DATA } from '@/data/celestialData';
 import { AuthManager } from '@/systems/auth/AuthManager';
+import { getCelestialTexture, getSaturnRingsTexture } from '@/systems/rendering/CelestialTextures';
 import { 
   Bookmark, 
   BookmarkCheck, 
   ArrowLeft, 
-  Compass, 
-  Layers, 
-  Wind, 
-  Moon as MoonIcon, 
-  History, 
-  Lightbulb, 
-  Sparkles,
-  Thermometer,
-  Gauge,
-  Orbit
+  Globe2
 } from 'lucide-react';
 
 interface PlanetExplorerProps {
@@ -30,55 +23,90 @@ interface PlanetExplorerProps {
   onSelectCelestialObject?: (id: string) => void;
 }
 
-// 3D Single Planet Rotating Sphere
-const SinglePlanetMesh: React.FC<{
+// 3D Photorealistic Single Planet Globe
+const PhotorealisticGlobe: React.FC<{
+  planetId: string;
   color: string;
   tiltDeg: number;
   hasRings?: boolean;
-  ringsInner?: number;
-  ringsOuter?: number;
-}> = ({ color, tiltDeg, hasRings, ringsInner = 2.4, ringsOuter = 4.2 }) => {
+}> = ({ planetId, color, tiltDeg, hasRings }) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const cloudsRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
+
+  // Load procedural textures
+  const texture = useMemo(() => {
+    if (planetId === 'earth') return getCelestialTexture('earth');
+    if (planetId === 'mars') return getCelestialTexture('mars');
+    if (planetId === 'jupiter') return getCelestialTexture('jupiter');
+    if (planetId === 'saturn') return getCelestialTexture('saturn');
+    return getCelestialTexture('generic');
+  }, [planetId]);
+
+  const cloudTexture = useMemo(() => {
+    return planetId === 'earth' ? getCelestialTexture('earth_clouds') : null;
+  }, [planetId]);
+
+  const ringsTexture = useMemo(() => {
+    return hasRings ? getSaturnRingsTexture() : null;
+  }, [hasRings]);
 
   useFrame((_, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.45;
+      meshRef.current.rotation.y += delta * 0.25;
+    }
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y += delta * 0.32; // Clouds rotate slightly faster
     }
   });
 
-  const ringsGeometry = useMemo(() => {
-    if (!hasRings) return null;
-    const ring = new THREE.RingGeometry(ringsInner, ringsOuter, 64);
-    ring.rotateX(Math.PI / 2);
-    return ring;
-  }, [hasRings, ringsInner, ringsOuter]);
-
   return (
     <group rotation={[0, 0, THREE.MathUtils.degToRad(tiltDeg)]}>
+      {/* Planetary Surface Globe */}
       <mesh ref={meshRef}>
-        <sphereGeometry args={[2.2, 64, 64]} />
+        <sphereGeometry args={[2.5, 64, 64]} />
         <meshStandardMaterial
+          map={texture}
           color={color}
-          roughness={0.65}
-          metalness={0.2}
-          bumpScale={0.05}
+          roughness={planetId === 'earth' ? 0.45 : 0.7}
+          metalness={0.1}
         />
       </mesh>
 
-      {/* Atmospheric Faint Glow */}
-      <mesh>
-        <sphereGeometry args={[2.28, 32, 32]} />
-        <meshBasicMaterial color={color} transparent opacity={0.12} />
+      {/* Earth Cloud Layer with Transparency */}
+      {planetId === 'earth' && cloudTexture && (
+        <mesh ref={cloudsRef}>
+          <sphereGeometry args={[2.535, 64, 64]} />
+          <meshStandardMaterial
+            map={cloudTexture}
+            transparent
+            opacity={0.85}
+            blending={THREE.NormalBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+
+      {/* Atmospheric Rim Glow */}
+      <mesh ref={glowRef}>
+        <sphereGeometry args={[2.62, 32, 32]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.15}
+          side={THREE.BackSide}
+        />
       </mesh>
 
-      {/* Saturn Rings */}
-      {hasRings && ringsGeometry && (
-        <mesh geometry={ringsGeometry}>
+      {/* Saturn Photorealistic Rings */}
+      {hasRings && ringsTexture && (
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[3.6, 6.6, 96]} />
           <meshStandardMaterial
-            color="#CBB282"
+            map={ringsTexture}
             side={THREE.DoubleSide}
             transparent
-            opacity={0.8}
+            opacity={0.92}
             roughness={0.5}
           />
         </mesh>
@@ -93,16 +121,16 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({
   onSelectCelestialObject
 }) => {
   const [selectedPlanetId, setSelectedPlanetId] = useState(initialPlanetId);
-  const [activeTab, setActiveTab] = useState<'overview' | 'structure' | 'atmosphere' | 'moons' | 'history' | 'facts'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'structure' | 'atmosphere' | 'surface' | 'moons' | 'history'>('overview');
   
   const auth = AuthManager.getInstance();
   const student = auth.getCurrentStudent();
 
   const planet = useMemo(() => {
-    return PLANETS_DATA.find(p => p.id === selectedPlanetId) || PLANETS_DATA[2]; // Default Earth
+    return PLANETS_DATA.find(p => p.id === selectedPlanetId) || PLANETS_DATA[2];
   }, [selectedPlanetId]);
 
-  // Record this planet as explored in student's profile
+  // Record exploration in student history
   React.useEffect(() => {
     if (planet) {
       auth.recordExplored(planet.id);
@@ -115,293 +143,236 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({
     auth.toggleBookmark(planet.id);
   };
 
-  // Associated moons
   const planetMoons = useMemo(() => {
-    return MOONS_DATA.filter(m => m.scientificData?.parentPlanet?.toLowerCase() === planet.name.toLowerCase());
+    return MOONS_DATA.filter(m => m.parentObjectId === planet.id);
   }, [planet]);
 
   return (
-    <div className="w-full h-full flex flex-col font-sans text-cosmos-text overflow-hidden">
-      {/* Top Breadcrumb & Planet Selector Bar */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-cosmos-border/60 bg-cosmos-subdark/60 backdrop-blur-md shrink-0">
-        <div className="flex items-center space-x-4">
+    <div className="relative w-full h-[calc(100vh-80px)] bg-[#03050B] text-cosmos-white flex overflow-hidden">
+      {/* 1. LEFT & CENTER FULL 3D INTERACTIVE GLOBE VIEWPORT */}
+      <div className="relative flex-1 h-full">
+        {/* Top Floating Breadcrumb & Planet Selector */}
+        <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-auto">
           <button
             onClick={onBackToSolarSystem}
-            className="p-2 rounded-xl border border-cosmos-border bg-cosmos-card/80 hover:bg-cosmos-card text-cosmos-muted hover:text-white transition flex items-center space-x-1.5 text-xs font-medium"
+            className="hud-panel px-4 py-2 rounded-full border border-cosmos-border text-xs font-mono text-cosmos-muted hover:text-white transition flex items-center space-x-2"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Solar System</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>HELIOSPHERE MAP</span>
           </button>
 
-          <div className="h-5 w-px bg-cosmos-border" />
-
-          {/* Planet Switcher Chips */}
-          <div className="flex items-center space-x-1 overflow-x-auto py-1">
-            {PLANETS_DATA.map(p => (
+          {/* Quick Planet Pills */}
+          <div className="hidden md:flex items-center space-x-1.5 hud-panel px-3 py-1.5 rounded-full border border-cosmos-border">
+            {PLANETS_DATA.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setSelectedPlanetId(p.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center space-x-1.5 ${
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all duration-300 ${
                   selectedPlanetId === p.id
-                    ? 'bg-cosmos-blue text-white shadow-cosmos-glow'
-                    : 'text-cosmos-muted hover:text-white hover:bg-cosmos-card'
+                    ? 'bg-cosmos-cyan/20 text-cosmos-cyan border border-cosmos-cyan/50 font-bold'
+                    : 'text-cosmos-muted hover:text-white'
                 }`}
               >
-                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color }} />
-                <span>{p.name}</span>
+                {p.name}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Bookmark CTA */}
-        <button
-          onClick={handleToggleBookmark}
-          className={`px-3.5 py-1.5 rounded-xl border text-xs font-semibold flex items-center space-x-2 transition ${
-            isBookmarked
-              ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-              : 'bg-cosmos-card border-cosmos-border text-cosmos-muted hover:text-white'
-          }`}
-        >
-          {isBookmarked ? <BookmarkCheck className="w-4 h-4 text-amber-400" /> : <Bookmark className="w-4 h-4" />}
-          <span>{isBookmarked ? 'BOOKMARKED' : 'BOOKMARK OBJECT'}</span>
-        </button>
-      </header>
+        {/* 3D Canvas */}
+        <Canvas camera={{ position: [0, 0, 7.5], fov: 42 }}>
+          <ambientLight intensity={0.35} />
+          <pointLight position={[12, 10, 10]} intensity={2.2} color="#FFF8E7" />
+          <Stars radius={120} depth={50} count={5000} factor={3} saturation={0.5} fade />
+          <PhotorealisticGlobe
+            planetId={planet.id}
+            color={planet.color}
+            tiltDeg={planet.id === 'venus' ? 177 : planet.id === 'uranus' ? 98 : 24}
+            hasRings={planet.id === 'saturn'}
+          />
+          <OrbitControls enableZoom={true} enablePan={false} minDistance={4.2} maxDistance={16} />
+        </Canvas>
 
-      {/* Main Exploration Split View */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 overflow-hidden">
-        {/* Left Column: Interactive 3D Planet Stage */}
-        <div className="lg:col-span-5 h-[360px] lg:h-full relative rounded-2xl overflow-hidden border border-cosmos-border bg-gradient-to-b from-cosmos-card/80 to-cosmos-dark shadow-2xl flex flex-col">
-          <div className="absolute top-4 left-4 z-10">
-            <span className="text-[10px] font-mono tracking-widest text-cosmos-cyan uppercase">3D PLANETARY MODEL</span>
-            <h2 className="text-2xl font-black text-white">{planet.name}</h2>
-            <p className="text-xs text-cosmos-muted">{planet.tagline}</p>
+        {/* Bottom Ambient HUD Cue */}
+        <div className="absolute bottom-6 left-6 z-20 pointer-events-none text-[11px] font-mono text-cosmos-muted/60 tracking-widest flex items-center space-x-2">
+          <Globe2 className="w-4 h-4 text-cosmos-cyan" />
+          <span>DRAG GLOBE TO ROTATE • WHEEL TO ZOOM SURFACES</span>
+        </div>
+      </div>
+
+      {/* 2. RIGHT CONTEXTUAL SCIENTIFIC TELEMETRY PANEL */}
+      <div className="w-[420px] h-full hud-panel border-l border-cosmos-border flex flex-col z-20 overflow-hidden shadow-2xl">
+        {/* Panel Header */}
+        <div className="p-6 border-b border-cosmos-border/50 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-widest text-cosmos-cyan uppercase">
+              SECTOR: SOLAR SYSTEM
+            </span>
+            <button
+              onClick={handleToggleBookmark}
+              className={`p-2 rounded-full border transition ${
+                isBookmarked
+                  ? 'bg-cosmos-gold/20 border-cosmos-gold/50 text-cosmos-gold'
+                  : 'border-cosmos-border text-cosmos-muted hover:text-white'
+              }`}
+              title={isBookmarked ? 'Remove Bookmark' : 'Add to My Discoveries'}
+            >
+              {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+            </button>
           </div>
 
-          <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
-            <ambientLight intensity={0.35} />
-            <pointLight position={[10, 10, 10]} intensity={1.8} color="#FFF8E7" />
-            <Stars radius={100} depth={40} count={3000} factor={3} saturation={0.4} fade />
-            <SinglePlanetMesh
-              color={planet.color}
-              tiltDeg={planet.id === 'venus' ? 177 : planet.id === 'uranus' ? 98 : 24}
-              hasRings={planet.id === 'saturn'}
-            />
-            <OrbitControls enableZoom={true} enablePan={false} minDistance={3.5} maxDistance={14} />
-          </Canvas>
+          <h2 className="text-3xl font-black font-display text-white">
+            {planet.name}
+          </h2>
+          <p className="text-xs text-cosmos-muted leading-relaxed">
+            {planet.tagline}
+          </p>
+        </div>
 
-          <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-cosmos-muted font-mono pointer-events-none">
-            <span>DRAG TO ROTATE • SCROLL TO ZOOM</span>
-            <span className="text-cosmos-cyan">REAL-TIME SHADING</span>
+        {/* Scientific Metric Badges */}
+        <div className="grid grid-cols-2 gap-2 p-6 pb-2 text-[11px] font-mono">
+          <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+            <span className="text-[9px] text-cosmos-muted uppercase block">EQUATORIAL DIAMETER</span>
+            <span className="text-white font-bold">{planet.scientificData?.diameterKm}</span>
+          </div>
+          <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+            <span className="text-[9px] text-cosmos-muted uppercase block">ORBITAL RADIUS</span>
+            <span className="text-white font-bold">{planet.scientificData?.distanceFromSunAU}</span>
+          </div>
+          <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+            <span className="text-[9px] text-cosmos-muted uppercase block">SURFACE GRAVITY</span>
+            <span className="text-white font-bold">{planet.scientificData?.gravityMps2}</span>
+          </div>
+          <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+            <span className="text-[9px] text-cosmos-muted uppercase block">MEAN TEMPERATURE</span>
+            <span className="text-white font-bold">{planet.scientificData?.avgTempC}</span>
           </div>
         </div>
 
-        {/* Right Column: Tabbed Scientific Knowledge & Moons */}
-        <div className="lg:col-span-7 flex flex-col overflow-hidden glass-panel rounded-2xl border border-cosmos-border p-6 shadow-2xl">
-          {/* Scientific Quick Spec Ribbons */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <div className="p-3 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60">
-              <div className="flex items-center space-x-1.5 text-cosmos-cyan text-xs mb-1">
-                <Compass className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-mono uppercase">DIAMETER</span>
+        {/* Tab Navigation */}
+        <div className="px-6 flex items-center space-x-2 border-b border-cosmos-border/40 pb-2 overflow-x-auto">
+          {(['overview', 'structure', 'atmosphere', 'surface', 'moons', 'history'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 py-1.5 rounded-full text-xs font-mono capitalize transition-all duration-300 shrink-0 ${
+                activeTab === tab
+                  ? 'bg-cosmos-cyan/20 text-cosmos-cyan font-bold border border-cosmos-cyan/40'
+                  : 'text-cosmos-muted hover:text-white'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Scrollable Editorial Content */}
+        <div className="flex-1 p-6 overflow-y-auto space-y-4 text-xs font-sans leading-relaxed text-cosmos-muted">
+          {activeTab === 'overview' && (
+            <div className="space-y-4">
+              <p className="text-sm text-cosmos-white font-light leading-relaxed">
+                {planet.overview}
+              </p>
+              <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-2">
+                <span className="text-[10px] font-mono text-cosmos-cyan uppercase tracking-widest block">
+                  ORBITAL PERIOD (YEAR)
+                </span>
+                <span className="text-white font-bold font-mono">
+                  {planet.scientificData?.revolutionPeriodDays}
+                </span>
               </div>
-              <span className="text-sm font-bold text-white font-mono">{planet.scientificData?.diameterKm}</span>
             </div>
+          )}
 
-            <div className="p-3 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60">
-              <div className="flex items-center space-x-1.5 text-cosmos-blue text-xs mb-1">
-                <Orbit className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-mono uppercase">DISTANCE</span>
-              </div>
-              <span className="text-sm font-bold text-white font-mono">{planet.scientificData?.distanceFromSunAU}</span>
+          {activeTab === 'structure' && (
+            <div className="space-y-3">
+              <h4 className="font-mono text-cosmos-cyan uppercase tracking-wider text-xs">
+                CORE & MANTLE COMPOSITION
+              </h4>
+              <p className="text-cosmos-white font-light leading-relaxed">
+                {planet.structure}
+              </p>
             </div>
+          )}
 
-            <div className="p-3 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60">
-              <div className="flex items-center space-x-1.5 text-amber-400 text-xs mb-1">
-                <Thermometer className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-mono uppercase">AVG TEMP</span>
-              </div>
-              <span className="text-sm font-bold text-white font-mono">{planet.scientificData?.avgTempC}</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60">
-              <div className="flex items-center space-x-1.5 text-cosmos-violet text-xs mb-1">
-                <Gauge className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-mono uppercase">GRAVITY</span>
-              </div>
-              <span className="text-sm font-bold text-white font-mono">{planet.scientificData?.gravityMps2}</span>
-            </div>
-          </div>
-
-          {/* Tabs Navigation */}
-          <div className="flex items-center space-x-2 border-b border-cosmos-border pb-3 mb-4 overflow-x-auto">
-            <button
-              onClick={() => setActiveTab('overview')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'overview' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <Lightbulb className="w-3.5 h-3.5" />
-              <span>Overview</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('structure')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'structure' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Structure</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('atmosphere')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'atmosphere' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <Wind className="w-3.5 h-3.5" />
-              <span>Atmosphere</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('moons')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'moons' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <MoonIcon className="w-3.5 h-3.5" />
-              <span>Moons ({planet.scientificData?.knownMoonsCount || 0})</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'history' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <History className="w-3.5 h-3.5" />
-              <span>Exploration</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('facts')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shrink-0 ${
-                activeTab === 'facts' ? 'bg-cosmos-blue text-white' : 'text-cosmos-muted hover:text-white'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Interesting Facts</span>
-            </button>
-          </div>
-
-          {/* Tab Content Display (Scrollable) */}
-          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-            {activeTab === 'overview' && (
-              <div className="space-y-4">
-                <p className="text-sm text-cosmos-text leading-relaxed font-sans">{planet.overview}</p>
-                <div className="p-4 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60 space-y-2">
-                  <h4 className="text-xs font-semibold text-cosmos-cyan tracking-wider uppercase">Rotational Dynamics</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div>
-                      <span className="text-cosmos-muted block">Sidereal Rotation Period:</span>
-                      <span className="font-mono text-white">{planet.scientificData?.rotationPeriodHours}</span>
-                    </div>
-                    <div>
-                      <span className="text-cosmos-muted block">Orbital Revolution (Year):</span>
-                      <span className="font-mono text-white">{planet.scientificData?.revolutionPeriodDays}</span>
-                    </div>
-                  </div>
+          {activeTab === 'atmosphere' && (
+            <div className="space-y-4">
+              <h4 className="font-mono text-cosmos-cyan uppercase tracking-wider text-xs">
+                ATMOSPHERIC COMPOSITION & DYNAMICS
+              </h4>
+              <p className="text-cosmos-white font-light leading-relaxed">
+                {planet.atmosphere}
+              </p>
+              {planet.scientificData?.atmosphereComposition && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {planet.scientificData.atmosphereComposition.map((gas, i) => (
+                    <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[11px] text-cosmos-white">
+                      {gas}
+                    </span>
+                  ))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+          )}
 
-            {activeTab === 'structure' && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-semibold text-cosmos-cyan tracking-wider uppercase">Internal Geophysics</h4>
-                <p className="text-sm text-cosmos-text leading-relaxed">{planet.structure || 'Internal structure profile being computed by planetary geological models.'}</p>
-              </div>
-            )}
+          {activeTab === 'surface' && (
+            <div className="space-y-3">
+              <h4 className="font-mono text-cosmos-cyan uppercase tracking-wider text-xs">
+                SURFACE FEATURES & TOPOGRAPHY
+              </h4>
+              <p className="text-cosmos-white font-light leading-relaxed">
+                {planet.surfaceFeatures || 'Topographical radar scan profiles currently processing.'}
+              </p>
+            </div>
+          )}
 
-            {activeTab === 'atmosphere' && (
-              <div className="space-y-4">
-                <p className="text-sm text-cosmos-text leading-relaxed">{planet.atmosphere || 'Atmospheric analysis underway.'}</p>
-                {planet.scientificData?.atmosphereComposition && (
-                  <div className="p-4 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60">
-                    <h5 className="text-xs font-semibold text-cosmos-cyan mb-2">CHEMICAL COMPOSITION</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {planet.scientificData.atmosphereComposition.map((gas, idx) => (
-                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-cosmos-card border border-cosmos-border text-xs font-mono text-cosmos-text">
-                          {gas}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'moons' && (
-              <div className="space-y-3">
-                <p className="text-xs text-cosmos-muted">
-                  Known confirmed natural satellites: <span className="font-bold text-white">{planet.scientificData?.knownMoonsCount || 0}</span>
-                </p>
-                {planetMoons.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {planetMoons.map(moon => (
-                      <div key={moon.id} className="p-3.5 rounded-xl bg-cosmos-subdark/80 border border-cosmos-border/60 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <h5 className="font-bold text-white text-xs">{moon.name}</h5>
-                            <span className="text-[10px] font-mono text-cosmos-cyan">{moon.scientificData?.diameterKm}</span>
-                          </div>
-                          <p className="text-[11px] text-cosmos-muted line-clamp-2 leading-normal mb-2">{moon.overview}</p>
-                        </div>
-                        <button
-                          onClick={() => onSelectCelestialObject?.(moon.id)}
-                          className="text-[11px] font-semibold text-cosmos-blue hover:text-cosmos-cyan transition text-left"
-                        >
-                          View Moon Details →
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-6 rounded-xl bg-cosmos-subdark/40 border border-dashed border-cosmos-border text-center text-xs text-cosmos-muted">
-                    No major spherical moons documented for this planetary body.
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'history' && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-semibold text-cosmos-cyan tracking-wider uppercase">Key Astronomical Missions</h4>
+          {activeTab === 'moons' && (
+            <div className="space-y-3">
+              <span className="text-[10px] font-mono text-cosmos-cyan uppercase tracking-widest block">
+                NATURAL SATELLITES ({planet.scientificData?.knownMoonsCount || 0} CONFIRMED)
+              </span>
+              {planetMoons.length > 0 ? (
                 <div className="space-y-2">
-                  {planet.explorationHistory && planet.explorationHistory.length > 0 ? (
-                    planet.explorationHistory.map((item, idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-cosmos-subdark/70 border border-cosmos-border/50 text-xs text-cosmos-text flex items-start space-x-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cosmos-blue mt-1.5 shrink-0" />
-                        <span>{item}</span>
+                  {planetMoons.map((moon) => (
+                    <div
+                      key={moon.id}
+                      onClick={() => onSelectCelestialObject?.(moon.id)}
+                      className="p-3 rounded-2xl bg-black/40 border border-white/5 hover:border-cosmos-cyan/40 transition cursor-pointer flex items-center justify-between group"
+                    >
+                      <div>
+                        <h5 className="font-bold text-white text-xs group-hover:text-cosmos-cyan transition">
+                          {moon.name}
+                        </h5>
+                        <span className="text-[10px] font-mono text-cosmos-muted">{moon.tagline}</span>
                       </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-cosmos-muted">Mission chronology currently cataloging.</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'facts' && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-semibold text-cosmos-cyan tracking-wider uppercase">Astronomical Highlights</h4>
-                <div className="space-y-2">
-                  {planet.interestingFacts.map((fact, idx) => (
-                    <div key={idx} className="p-3 rounded-xl bg-cosmos-subdark/70 border border-cosmos-border/50 text-xs text-cosmos-text flex items-start space-x-2.5">
-                      <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                      <span className="leading-relaxed">{fact}</span>
+                      <span className="text-cosmos-cyan font-mono text-xs group-hover:translate-x-1 transition">
+                        Inspect →
+                      </span>
                     </div>
                   ))}
                 </div>
+              ) : (
+                <p className="text-xs text-cosmos-muted font-mono">
+                  No major spherical natural satellites orbit this body.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'history' && (
+            <div className="space-y-3">
+              <h4 className="font-mono text-cosmos-cyan uppercase tracking-wider text-xs">
+                CHRONOLOGY OF ROBOTIC MISSIONS
+              </h4>
+              <div className="space-y-2">
+                {planet.explorationHistory?.map((mission, i) => (
+                  <div key={i} className="p-3 rounded-2xl bg-black/40 border border-white/5 text-xs text-cosmos-white">
+                    {mission}
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
